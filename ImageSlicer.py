@@ -10,12 +10,13 @@ import pyvips  # 导入pyvips包
 
 
 class ImageSlicer(object):
-    def __init__(self, slice_size, drop_last=True, enable_filter=True, threshold=230, prefix='', suffix='.jpg'):
+    def __init__(self, slice_size, drop_last=True, enable_filter=True, threshold=230, target_dir='', prefix='', suffix='.jpg'):
         """
         初始化图片切割器
         :param slice_size: 切片大小 [height, width]
         :param drop_last: 舍弃图片边缘
         :param threshold: 方差阈值
+        :param target_dir: 目标文件夹 ''代表默认指定切片当前文件夹
         :param prefix: 文件前缀
         :param suffix: 文件后缀
         """
@@ -23,6 +24,7 @@ class ImageSlicer(object):
         self.drop_last = drop_last
         self.enable_filter = enable_filter
         self.threshold = threshold
+        self.target_dir = target_dir
         self.prefix = prefix
         self.suffix = suffix
 
@@ -41,11 +43,14 @@ class ImageSlicer(object):
                 outputs = self._filter_images(outputs)
             # 创建文件
             filepath, filename = os.path.split(file)
-            image_name = filename.split('.')[0]
-            target_dir = os.path.join(filepath, image_name)
-            if not os.path.exists(target_dir):
-                os.makedirs(target_dir)
-            self._save_images(outputs, target_dir)
+            image_folder_name = ''.join(filename.split('.')[:-1])
+            if self.target_dir == '':
+                image_dir = os.path.join(filepath, image_folder_name)
+            else:
+                image_dir = os.path.join(self.target_dir, image_folder_name)
+            if not os.path.exists(image_dir):
+                os.makedirs(image_dir)
+            self._save_images(outputs, image_dir)
 
     def _slice_image(self, file):
         """
@@ -72,9 +77,6 @@ class ImageSlicer(object):
                     end_h = min(h, end_h)
                     end_w = min(w, end_w)
                 output.append({"image": img[i: end_h, j: end_w, :], "row": i // stride_h, "col": j // stride_w})
-                # # used for debug
-                # if len(output) >= 1000:
-                #     break
         return output
 
     def _filter_images(self, outputs):
@@ -101,11 +103,11 @@ class ImageSlicer(object):
             fast += 1
         return outputs[:slow]
 
-    def _save_images(self, outputs, target_dir=None):
+    def _save_images(self, outputs, image_dir=None):
         """
         保存图片至指定文件夹
         :param outputs:
-        :param target_dir:
+        :param image_dir:
         :return:
         """
         # 指定文件名
@@ -119,7 +121,7 @@ class ImageSlicer(object):
             slice_name = self.prefix + str(i).zfill(width) + '_' + str(rows[i]).zfill(index_width) + '_' + str(
                 cols[i]).zfill(index_width) + self.suffix
             img = Image.fromarray(image).convert('RGB')
-            img.save(os.path.join(target_dir, slice_name))
+            img.save(os.path.join(image_dir, slice_name))
 
 if __name__ == '__main__':
     # options = {
@@ -130,6 +132,7 @@ if __name__ == '__main__':
     #     'suffix': '.jpg'
     # }
     # files = ['../test.svs', '../test2.svs']
-    files = [r"C:\Users\ChestnutLee\Desktop\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D76(1).svs"]
+    files = [r"E:\Projects\Carcinoma\素材\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78.svs",
+             r"E:\Projects\Carcinoma\素材\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78 - 副本.svs"]
     slicer = ImageSlicer(slice_size=[892, 892], threshold=235)
     slicer.generate_slices(files)
