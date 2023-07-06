@@ -112,7 +112,7 @@ class ImageSlicer(object):
             num_h, num_w = img.height // stride_h, img.width // stride_w
             img = img.crop(0, 0, num_w * stride_w, num_h * stride_h)
         else:
-            num_h, num_w = math.ceil(img.height / stride_h), math.ceil(img.width // stride_w)
+            num_h, num_w = math.ceil(img.height / stride_h), math.ceil(img.width / stride_w)
         width = len(str(max(num_h, num_w)))
         # 裁切图片
         img = img.numpy()
@@ -137,6 +137,6 @@ if __name__ == '__main__':
     # }
     # files = ['../test.svs', '../test2.svs']
     file = r"E:\Projects\Carcinoma\素材\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78.svs"
-    slicer = ImageSlicer(slice_size=[892, 892], drop_last=False, enable_filter=False, threshold=235, down_sample=1, suffix='.jpg', prefix='xxx')
+    slicer = ImageSlicer(slice_size=[892, 1000], drop_last=False, enable_filter=False, threshold=235, down_sample=1, suffix='.jpg', prefix='xxx')
     slicer.set_file(file)
     slicer.generate_slices()
