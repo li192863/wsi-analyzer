@@ -67,7 +67,10 @@ class ImageSlicer(object):
         image = self.image.resize(1 / self.down_sample)
         stride_h, stride_w = self.slice_size
         h, w = image.height, image.width
-        num_h, num_w = h // stride_h, w // stride_w
+        if self.drop_last:
+            num_h, num_w = h // stride_h, w // stride_w
+        else:
+            num_h, num_w = math.ceil(h / stride_h), math.ceil(w / stride_w)
         count = int(num_h * num_w)
         info = f'空白占比={white_ratio * 100:.1f}%(误差：{diff * 100:.0f}%)，分片数量={num_h}x{num_w}={count}'
         return info

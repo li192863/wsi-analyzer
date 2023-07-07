@@ -89,6 +89,8 @@ class SlicerApplication(QtWidgets.QMainWindow):
     def handle_checkbox_drop_last_state_changed(self):
         """ 舍弃边缘改变时触发 """
         self.slicer.drop_last = self.ui.checkbox_drop_last.isChecked()
+        # 关联事件
+        self.analyze_file()
 
     def handle_checkbox_enable_filter_clicked(self):
         """ 是否过滤被点击时触发方差阈值变化 """
