@@ -134,7 +134,12 @@ class ImageSlicer(object):
                 img_slice = img[top: top + stride_h, left: left + stride_w]
                 if self.enable_filter and self.compute_while_ratio(img_slice) > 0.5:
                     continue
-                slice_name = f'{self.prefix}_{filename}_{str(i).zfill(width)}_{str(j).zfill(width)}{self.suffix}'
+                slice_name = f'{self.prefix}' \
+                             f'i{str(i).zfill(width)}_' \
+                             f'j{str(j).zfill(width)}_' \
+                             f'd{str(self.down_sample).zfill(2)}_' \
+                             f'{filename}' \
+                             f'{self.suffix}'
                 image = Image.fromarray(img_slice).convert('RGB')
                 image.save(osp.join(image_dir, slice_name))
 
