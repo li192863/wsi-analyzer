@@ -10,8 +10,8 @@
 'image_height': 2048  # 默认图片高
 'image_width': 2048  # 默认图片宽
 'drop_last': True  # 默认是否舍弃边缘 填True或False
-'enable_filter': False  # 默认开启过滤 填True或False
+'enable_filter': True  # 默认开启过滤 填True或False
 'threshold': 235  # 默认颜色阈值 像素点各通道数值均值超过该值将视为空白像素点 填0~255
-'down_sample': 3  # 默认降采样值 保留小数点后两位
+'down_sample': 10  # 默认降采样值 保留小数点后两位
 'target_dir': ''  # 默认输出文件夹 ''为不指定
 'file_format': '.jpg'  # 默认文件格式 填jpg png等

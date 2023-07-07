@@ -132,7 +132,7 @@ class ImageSlicer(object):
             for j in range(0, num_w):
                 left = j * stride_w
                 img_slice = img[top: top + stride_h, left: left + stride_w]
-                if self.enable_filter and self.compute_while_ratio(img_slice) > 0.5:
+                if self.enable_filter and self.compute_while_ratio(img_slice) > 0.85:
                     continue
                 slice_name = f'{self.prefix}' \
                              f'i{str(i).zfill(width)}_' \

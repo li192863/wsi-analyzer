@@ -136,8 +136,7 @@ class SlicerApplication(QtWidgets.QMainWindow):
         """ 点击开始转换时触发 """
         # 关联控价
         self.ui.statusbar.showMessage('正在转换，请稍后...')
-        self.ui.button_choose_file.setEnabled(False)
-        self.ui.button_convert.setEnabled(False)
+        self.freeze_window()
         # 转换文件
         # 注意，此处需将convert_thread声明为实例变量，若为局部变量，函数执行完立即释放，而del函数使主线程卡死
         self.convert_thread = ConvertThread(self.slicer)
@@ -147,9 +146,8 @@ class SlicerApplication(QtWidgets.QMainWindow):
     def event_convert_completed(self, message):
         """ 转换文件完成响应 """
         self.ui.statusbar.showMessage(message)
-        self.ui.button_choose_file.setEnabled(True)
-        self.ui.button_convert.setEnabled(False)
         self.file_name = ''
+        self.restore_window()
         QApplication.beep()  # 提示音
         QApplication.alert(self)  # 任务栏闪烁提醒
 
@@ -168,8 +166,37 @@ class SlicerApplication(QtWidgets.QMainWindow):
         self.analyze_thread.analyze_signal.connect(self.event_analyze_completed)
         self.analyze_thread.start()
 
+    def freeze_window(self):
+        """ 冻结窗口 """
+        self.ui.spinbox_image_height.setEnabled(False)
+        self.ui.spinbox_image_width.setEnabled(False)
+        self.ui.checkbox_drop_last.setEnabled(False)
+        self.ui.checkbox_enable_filter.setEnabled(False)
+        self.ui.spinbox_threshold.setEnabled(False)
+        self.ui.doubleSpinBox_down_sample.setEnabled(False)
+        self.ui.lineEdit_file_format.setEnabled(False)
+        self.ui.lineEdit_target_dir.setEnabled(False)
+        self.ui.button_choose_target_dir.setEnabled(False)
+        self.ui.button_choose_file.setEnabled(False)
+        self.ui.button_convert.setEnabled(False)
+
+    def restore_window(self):
+        """ 恢复窗口 """
+        self.ui.spinbox_image_height.setEnabled(True)
+        self.ui.spinbox_image_width.setEnabled(True)
+        self.ui.checkbox_drop_last.setEnabled(True)
+        self.ui.checkbox_enable_filter.setEnabled(True)
+        self.ui.spinbox_threshold.setEnabled(self.ui.checkbox_enable_filter.isChecked())
+        self.ui.doubleSpinBox_down_sample.setEnabled(True)
+        self.ui.lineEdit_file_format.setEnabled(True)
+        self.ui.lineEdit_target_dir.setEnabled(True)
+        self.ui.button_choose_target_dir.setEnabled(True)
+        self.ui.button_choose_file.setEnabled(True)
+        self.ui.button_convert.setEnabled(False)
+
 
 class ConvertThread(QThread):
+    """ 转换线程 """
     convert_signal = Signal(str)
     def __init__(self, slicer):
         super(ConvertThread, self).__init__()
@@ -183,6 +210,7 @@ class ConvertThread(QThread):
             self.convert_signal.emit(f'转换失败！错误信息: {str(e)}')
 
 class AnalyzeThread(QThread):
+    """ 分析线程 """
     analyze_signal = Signal(str)
     def __init__(self, slicer):
         super(AnalyzeThread, self).__init__()
