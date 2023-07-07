@@ -101,6 +101,8 @@ class SlicerApplication(QtWidgets.QMainWindow):
     def handle_spinbox_threshold_value_changed(self):
         """ 空白阈值数值变化时触发 """
         self.slicer.threshold = self.ui.spinbox_threshold.value()
+        # 关联事件
+        self.analyze_file()
 
     def handle_double_spinbox_down_sample_value_changed(self):
         """ 降采样数值变化时触发 """
