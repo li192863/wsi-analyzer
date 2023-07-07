@@ -60,8 +60,8 @@ class ImageSlicer(object):
         :return:
         """
         # 空白占比
-        white_ratio1 = self.compute_while_ratio(pyvips.Image.thumbnail(self.file_name, self._thumbnail_width), smooth_value=3, threshold=self.threshold, random_access=False)
-        white_ratio2 = self.compute_while_ratio(pyvips.Image.thumbnail(self.file_name, self._thumbnail_width), smooth_value=3, threshold=255 - self.threshold, random_access=False)
+        white_ratio1 = self.compute_while_ratio(pyvips.Image.thumbnail(self.file_name, self._thumbnail_width), smooth_value=3, threshold=self.threshold)
+        white_ratio2 = self.compute_while_ratio(pyvips.Image.thumbnail(self.file_name, self._thumbnail_width), smooth_value=3, threshold=255 - self.threshold)
         white_ratio, diff = (white_ratio1 + white_ratio2) / 2, abs(white_ratio2 - white_ratio1)
         # 分片数量
         image = self.image.resize(1 / self.down_sample)

@@ -226,7 +226,7 @@ class Ui_Slicer(object):
         self.doubleSpinBox_down_sample.setAlignment(Qt.AlignCenter)
         self.doubleSpinBox_down_sample.setMinimum(1.000000000000000)
         self.doubleSpinBox_down_sample.setMaximum(1000.000000000000000)
-        self.doubleSpinBox_down_sample.setSingleStep(0.100000000000000)
+        self.doubleSpinBox_down_sample.setSingleStep(0.500000000000000)
 
         self.layout_config_down_sample.addWidget(self.doubleSpinBox_down_sample)
 
