@@ -1,6 +1,7 @@
 import math
 import os
 import os.path as osp
+from threading import Thread
 
 import PIL.Image
 from PIL import Image
@@ -36,6 +37,7 @@ class ImageSlicer(object):
         self.image = None
         self.white_ratio = 1
         self._thumbnail_width = 100
+        self._white_threshold = 77
 
     def set_file(self, file_name):
         """
@@ -49,25 +51,28 @@ class ImageSlicer(object):
             self.white_ratio = 1
             return
         self.file_name = file_name
-        self.white_ratio = self.compute_while_ratio(pyvips.Image.thumbnail(self.file_name, self._thumbnail_width))
-        self.image = pyvips.Image.new_from_file(self.file_name, access='sequential').resize(1 / self.down_sample)
-        self.width, self.height, self.depth = self.image.width, self.image.height, self.image.bands
+        self.image = pyvips.Image.new_from_file(self.file_name, access='sequential', memory=True)
 
-    def get_info(self, down_sample: float = 2):
+    def analyze_slices(self):
         """
         由当前降采样值得到降采样后图片尺寸
         :param down_sample:
         :return:
         """
-        img = pyvips.Image.thumbnail(self.file_name, int(self.image.width / down_sample))
+        # 空白占比
+        white_ratio1 = self.compute_while_ratio(pyvips.Image.thumbnail(self.file_name, self._thumbnail_width), smooth_value=3, threshold=self.threshold, random_access=False)
+        white_ratio2 = self.compute_while_ratio(pyvips.Image.thumbnail(self.file_name, self._thumbnail_width), smooth_value=3, threshold=255 - self.threshold, random_access=False)
+        white_ratio, diff = (white_ratio1 + white_ratio2) / 2, abs(white_ratio2 - white_ratio1)
+        # 分片数量
+        image = self.image.resize(1 / self.down_sample)
         stride_h, stride_w = self.slice_size
-        h, w = img.height, img.width
+        h, w = image.height, image.width
         num_h, num_w = h // stride_h, w // stride_w
-        count = int(num_h * num_w * (1.0 - self.white_ratio))
-        info = f'空白占比={self.white_ratio * 100:.1f}%，分片数量≈{num_h}x{num_w}x{(1 - self.white_ratio) * 100:.1f}%={count}'
+        count = int(num_h * num_w)
+        info = f'空白占比={white_ratio * 100:.1f}%(误差：{diff * 100:.0f}%)，分片数量={num_h}x{num_w}={count}'
         return info
 
-    def compute_while_ratio(self, image, num_points=1000):
+    def compute_while_ratio(self, image, num_points=500, smooth_value=1, threshold=235, random_access=True):
         """
         计算白色占比
         :param picture:
@@ -81,11 +86,14 @@ class ImageSlicer(object):
             img = image
         height, width, depth = img.shape
         # 读取图片
-        num_points = min(width * height, num_points)
-        indices0 = np.random.randint(0, height, (num_points,))
-        indices1 = np.random.randint(0, width, (num_points,))
-
-        white_ratio = np.count_nonzero(np.mean(img[indices0, indices1], axis=1) > self.threshold) / num_points
+        if random_access:
+            num_points = num_points * smooth_value
+            indices0 = np.random.randint(0, height, (num_points,))
+            indices1 = np.random.randint(0, width, (num_points,))
+            # 计算占比
+            white_ratio = np.count_nonzero(np.mean(img[indices0, indices1], axis=1) > threshold) / num_points / smooth_value
+        else:
+            white_ratio = np.count_nonzero(np.mean(img, axis=-1) > threshold) / height / width
         return white_ratio
 
     def generate_slices(self):
@@ -94,6 +102,8 @@ class ImageSlicer(object):
         :param file:
         :return:
         """
+        # 裁切图片
+        self.image = self.image.resize(1 / self.down_sample)
         # 保存路径
         filepath, filename = os.path.split(self.file_name)
         image_folder_name = ''.join(filename.split('.')[:-1])
@@ -103,19 +113,17 @@ class ImageSlicer(object):
             image_dir = os.path.join(self.target_dir, image_folder_name)
         if not os.path.exists(image_dir):
             os.makedirs(image_dir)
-        # 缩小图片
-        img = pyvips.Image.thumbnail(self.file_name, int(self.image.width / self.down_sample))
         # 计算尺寸
         stride_h, stride_w = self.slice_size
         # 抛弃边缘
         if self.drop_last:
-            num_h, num_w = img.height // stride_h, img.width // stride_w
-            img = img.crop(0, 0, num_w * stride_w, num_h * stride_h)
+            num_h, num_w = self.image.height // stride_h, self.image.width // stride_w
+            self.image = self.image.crop(0, 0, num_w * stride_w, num_h * stride_h)
         else:
-            num_h, num_w = math.ceil(img.height / stride_h), math.ceil(img.width / stride_w)
+            num_h, num_w = math.ceil(self.image.height / stride_h), math.ceil(self.image.width / stride_w)
         width = len(str(max(num_h, num_w)))
         # 裁切图片
-        img = img.numpy()
+        img = self.image.numpy()
         for i in range(0, num_h):
             top = i * stride_h
             for j in range(0, num_w):
@@ -139,4 +147,5 @@ if __name__ == '__main__':
     file = r"E:\Projects\Carcinoma\素材\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78.svs"
     slicer = ImageSlicer(slice_size=[892, 1000], drop_last=False, enable_filter=False, threshold=235, down_sample=1, suffix='.jpg', prefix='xxx')
     slicer.set_file(file)
+    slicer.analyze_slices()
     slicer.generate_slices()
