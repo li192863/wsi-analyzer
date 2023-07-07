@@ -136,7 +136,6 @@ class SlicerApplication(QtWidgets.QMainWindow):
         self.ui.statusbar.showMessage('正在转换，请稍后...')
         self.ui.button_choose_file.setEnabled(False)
         self.ui.button_convert.setEnabled(False)
-        print(self.slicer.enable_filter)
         # 转换文件
         # 注意，此处需将convert_thread声明为实例变量，若为局部变量，函数执行完立即释放，而del函数使主线程卡死
         self.convert_thread = ConvertThread(self.slicer)
@@ -148,6 +147,7 @@ class SlicerApplication(QtWidgets.QMainWindow):
         self.ui.statusbar.showMessage(message)
         self.ui.button_choose_file.setEnabled(True)
         self.ui.button_convert.setEnabled(False)
+        self.file_name = ''
         QApplication.beep()  # 提示音
         QApplication.alert(self)  # 任务栏闪烁提醒
 
