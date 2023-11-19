@@ -6,7 +6,7 @@ from typing import Iterable
 import numpy as np
 from PIL import Image
 
-from utils.common_util import make_directory
+from utils import make_directory
 
 
 class Slicer(ABC):
