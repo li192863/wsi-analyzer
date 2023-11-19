@@ -3,8 +3,6 @@ import torch.nn.functional as F
 from torch import Tensor
 from torchvision.transforms import InterpolationMode, transforms
 
-# import segmentation.transforms as T
-
 from inferencers.Inferencer import Inferencer
 
 
