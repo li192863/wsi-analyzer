@@ -137,3 +137,4 @@ dmypy.json
 /model/classification/
 /model/segmentation/
 /tmp/
+/vips-dev-8.14/
