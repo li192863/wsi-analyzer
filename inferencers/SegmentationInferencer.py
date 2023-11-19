@@ -73,16 +73,12 @@ class SegmentationInferencer(Inferencer):
 
 
 if __name__ == '__main__':
-    from segmentation.model import DeepLabV3Plus
+    from model import get_seg_model
 
     classes = ['_background_', 'Normal', 'Tumor']
-    model = DeepLabV3Plus(len(classes), pretrained=False)
-    weights = '../segmentation/data/model.pth'
-    # 推理器
+    model = get_seg_model(classes)
+    weights = '../weights/seg_model.pth'
     inferencer = SegmentationInferencer(model, weights, classes, inference_size=(1024, 1024),
-                                        required_size=(3000, 3000),
-                                        batch_size=2)
-    # inferencer = SegmentationInferencer(model, weights, classes, batch_size=2)
-    predictions = inferencer.inference_folder(
-        r'E:\Projects\Carcinoma\#Temp\素材\seg_slices')
+                                        required_size=(3000, 3000), batch_size=2)
+    predictions = inferencer.inference_folder(r'E:\Projects\Carcinoma\#Temp\素材\seg_slices')
     print(predictions)

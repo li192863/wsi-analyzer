@@ -72,13 +72,12 @@ class ClassificationInferencer(Inferencer):
 
 if __name__ == '__main__':
     # 模型
-    from classification.model import get_model_finetuning_the_convnet
+    from model import get_cla_model
 
     classes = ['出血', '坏死', '实质', '淋巴', '空泡', '空白', '间质']
-    model = get_model_finetuning_the_convnet(len(classes), pretrained=False)
-    weights = '../classification/data/model.pth'
+    model = get_cla_model(classes)
+    weights = '../weights/cla_model.pth'
     transform = ClassificationPresetEval(resize_size=256)
-    # 推理器
     inferencer = ClassificationInferencer(model, weights, classes, batch_size=32, inference_size=(256, 256))
     predictions = inferencer.inference_folder(r'E:\Projects\Carcinoma\#Temp\素材\cla_slices')
     print(predictions)

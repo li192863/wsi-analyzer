@@ -1,6 +1,5 @@
 import os
 from abc import ABC, abstractmethod
-from typing import Dict
 
 import torch
 import torchvision.transforms.functional as F
@@ -162,4 +161,3 @@ class Inferencer(ABC):
         :return: 推理结果
         """
         return self.inference_batch([file])
-
