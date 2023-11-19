@@ -115,26 +115,14 @@ class ClassificationResult(Result):
 
 
 if __name__ == '__main__':
-    from classification.model import get_model_finetuning_the_convnet
+    from model import get_cla_model
     from inferencers import ClassificationInferencer
-    from utils.common_util import show_tensor_as_image
+    from utils import *
     classes = ['出血', '坏死', '实质', '淋巴', '空泡', '空白', '间质']
-    model = get_model_finetuning_the_convnet(len(classes), pretrained=False)
-    weights = '../classification/data/model.pth'
+    model = get_cla_model(classes)
+    weights = '../weights/cla_model.pth'
     inferencer = ClassificationInferencer(model, weights, classes, batch_size=32)
-    predictions = inferencer.inference_folder(
-        r'E:\Projects\Carcinoma\#Temp\素材\TCGA-2Y-A9GW-01Z-00-DX171805205-933D-4D72-A4A2-586DC5490D76\cla_slices')
+    predictions = read_object('../tmp/cla_dict_result.pkl')
     # 分割结果
     cla_result = ClassificationResult(predictions, (256, 256), 1)
-    with open('cla_result.pkl', 'wb') as f:
-        pickle.dump(cla_result, f)
-    scaled_class = cla_result.get_scaled_region_class(0, 0, 2048*16*2, 2048*16)
-    show_tensor_as_image(scaled_class)
-    print(cla_result.get_scaled_region_result(2048*16, 0, 2048*16*2, 2048*16))
-    print(cla_result[0, 8])
-    print(cla_result[3, 334])
-    print(cla_result[25, 230])
-    print(cla_result[25, 238])
-    print(cla_result[27, 239])
-    print(cla_result[27, 252])
-    print(cla_result[999, 999])
+    print(cla_result)

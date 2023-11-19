@@ -113,23 +113,13 @@ class SegmentationResult(Result):
 
 
 if __name__ == '__main__':
-    from segmentation.model import DeepLabV3Plus
+    from model import get_seg_model
     from inferencers import SegmentationInferencer
-    from utils.common_util import show_tensor_as_image
+    from utils import *
     classes = ['_background_', 'Normal', 'Tumor']
-    model = DeepLabV3Plus(len(classes), pretrained=False)
-    weights = '../segmentation/data/model.pth'
+    model = get_seg_model(classes)
+    weights = '../weights/seg_model.pth'
     inferencer = SegmentationInferencer(model, weights, classes, batch_size=2)
-    predictions = inferencer.inference_folder(
-        r'E:\Projects\Carcinoma\#Temp\素材\TCGA-2Y-A9GW-01Z-00-DX171805205-933D-4D72-A4A2-586DC5490D76\seg_slices')
-    # 分割结果
+    predictions = read_object('../tmp/seg_dict_result.pkl')
     seg_result = SegmentationResult(predictions, (2048, 2048), 16)
-    scaled_tensor = seg_result.get_scaled_region_tensor(1024, 1024, 2048, 2048)
-    show_tensor_as_image(scaled_tensor)
-    print(seg_result.get_scaled_region_result(1024, 1024, 2048, 2048))
-    scaled_tensor = seg_result.get_scaled_region_tensor(1024, 1024, 3072, 2048)
-    show_tensor_as_image(scaled_tensor)
-    print(seg_result.get_scaled_region_result(1024, 1024, 3072, 2048))
-    scaled_tensor = seg_result.get_scaled_region_tensor(2048, 1024, 3072, 2048)
-    show_tensor_as_image(scaled_tensor)
-    print(seg_result.get_scaled_region_result(2048, 1024, 3072, 2048))
+    print(seg_result)
