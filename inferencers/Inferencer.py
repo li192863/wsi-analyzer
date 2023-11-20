@@ -58,7 +58,7 @@ class Inferencer(ABC):
     def __init__(
             self,
             model,
-            weights,
+            weight,
             classes,
             transform_cls=None,
             inference_size=None,
@@ -69,7 +69,7 @@ class Inferencer(ABC):
         """
         初始化推理器
         :param model: 模型
-        :param weights: 模型权重路径，字符串
+        :param weight: 模型权重路径，字符串
         :param classes: 模型类别信息，列表
         :param transform_cls: 模型预处理器
         :param inference_size: 模型推理时使用的尺寸 **[height, width]**
@@ -78,7 +78,7 @@ class Inferencer(ABC):
         :param device: 推理时使用的设备，默认情况下，cuda可用时使用cuda，否则使用cpu
         """
         self.model = model
-        self.weights = weights
+        self.weight = weight
         self.classes = classes
         self.transform_cls = transform_cls
         self.inference_size = inference_size  # 图片的高宽(h, w)，默认以图片列表第一张图片为输出尺寸
@@ -91,7 +91,7 @@ class Inferencer(ABC):
         # 模型加载
         self.model = self.model.to(self.device)
         # 加载权重
-        self.model.load_state_dict(torch.load(weights))
+        self.model.load_state_dict(torch.load(weight))
 
     @abstractmethod
     def post_process(self, inputs: Tensor, outputs: Tensor) -> list:

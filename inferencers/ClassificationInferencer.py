@@ -35,7 +35,7 @@ class ClassificationInferencer(Inferencer):
     def __init__(
             self,
             model,
-            weights,
+            weight,
             classes,
             transform_cls=ClassificationPresetEval,
             inference_size=None,
@@ -46,7 +46,7 @@ class ClassificationInferencer(Inferencer):
         """
         初始化推理器
         :param model: 模型
-        :param weights: 模型权重路径，字符串
+        :param weight: 模型权重路径，字符串
         :param classes: 模型类别信息，列表
         :param transform_cls: 模型预处理器
         :param inference_size: 模型推理时使用的尺寸 **[height, width]**
@@ -54,7 +54,7 @@ class ClassificationInferencer(Inferencer):
         :param batch_size: 推理时的批次
         :param device: 推理时使用的设备，默认情况下，cuda可用时使用cuda，否则使用cpu
         """
-        super(ClassificationInferencer, self).__init__(model, weights, classes, transform_cls, inference_size,
+        super(ClassificationInferencer, self).__init__(model, weight, classes, transform_cls, inference_size,
                                                        required_size, batch_size, device)
 
     def post_process(self, inputs: Tensor, outputs: Tensor) -> list:
@@ -76,8 +76,8 @@ if __name__ == '__main__':
 
     classes = ['出血', '坏死', '实质', '淋巴', '空泡', '空白', '间质']
     model = get_cla_model(classes)
-    weights = '../weights/cla_model.pth'
+    weight = '../weights/cla_model.pth'
     transform = ClassificationPresetEval(resize_size=256)
-    inferencer = ClassificationInferencer(model, weights, classes, batch_size=32, inference_size=(256, 256))
+    inferencer = ClassificationInferencer(model, weight, classes, batch_size=32, inference_size=(256, 256))
     predictions = inferencer.inference_folder(r'E:\Projects\Carcinoma\#Temp\素材\cla_slices')
     print(predictions)

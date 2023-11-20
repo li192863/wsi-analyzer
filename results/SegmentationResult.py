@@ -118,8 +118,8 @@ if __name__ == '__main__':
     from utils import *
     classes = ['_background_', 'Normal', 'Tumor']
     model = get_seg_model(classes)
-    weights = '../weights/seg_model.pth'
-    inferencer = SegmentationInferencer(model, weights, classes, batch_size=2)
+    weight = '../weights/seg_model.pth'
+    inferencer = SegmentationInferencer(model, weight, classes, batch_size=2)
     predictions = read_object('../tmp/seg_dict_result.pkl')
     seg_result = SegmentationResult(predictions, (2048, 2048), 16)
     print(seg_result)

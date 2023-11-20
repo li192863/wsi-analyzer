@@ -120,8 +120,8 @@ if __name__ == '__main__':
     from utils import *
     classes = ['出血', '坏死', '实质', '淋巴', '空泡', '空白', '间质']
     model = get_cla_model(classes)
-    weights = '../weights/cla_model.pth'
-    inferencer = ClassificationInferencer(model, weights, classes, batch_size=32)
+    weight = '../weights/cla_model.pth'
+    inferencer = ClassificationInferencer(model, weight, classes, batch_size=32)
     predictions = read_object('../tmp/cla_dict_result.pkl')
     # 分割结果
     cla_result = ClassificationResult(predictions, (256, 256), 1)
