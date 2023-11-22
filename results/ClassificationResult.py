@@ -37,19 +37,23 @@ class ClassificationResult(Result):
         self.slice_paths = slice_paths
         self.results = results
         self.counts = counts
-        # self.counts[self.default_value] = max_r * max_c - sum(counts.values())  # 处理缺失值
-        # self.ratios = {cla_idx: count / max_r / max_c for cla_idx, count in counts.items()}
 
-    def get_summary(self, classes: list):
+    def get_summary_table(self, classes: list):
         """
         统计信息
         :param classes: 种类信息，列表
         :return:
         """
-        idx_to_class = {idx: clazz for idx, clazz in enumerate(classes)}
-        count_res = {idx_to_class[i]: count for i, count in self.counts.items()}
-        ratio_res = {idx_to_class[i]: count/sum(self.counts.values()) for i, count in self.counts.items()}
-        return count_res, ratio_res
+        # idx_to_class = {idx: clazz for idx, clazz in enumerate(classes)}
+        # count_res = {idx_to_class[i]: count for i, count in self.counts.items()}
+        # ratio_res = {idx_to_class[i]: count/sum(self.counts.values()) for i, count in self.counts.items()}
+        count_res = [self.counts.get(cla_idx, 0) for cla_idx in range(len(classes))]
+        ratio_res = [count / sum(count_res) for count in count_res]
+        classes_str = '\t'.join(list(map(str, ['分类'] + classes)))
+        count_str = '\t'.join(list(map(str, ['计数'] + count_res)))
+        ratio_str = '\t'.join(list(map(str, ['占比'] + ratio_res)))
+        res = '\n'.join([classes_str, count_str, ratio_str])
+        return res
 
     def get_scaled_region_class(self, scaled_x1: int, scaled_y1: int, scaled_x2: int, scaled_y2: int):
         """
@@ -121,8 +125,43 @@ if __name__ == '__main__':
     classes = ['出血', '坏死', '实质', '淋巴', '空泡', '空白', '间质']
     model = get_cla_model(classes)
     weight = '../weights/cla_model.pth'
-    inferencer = ClassificationInferencer(model, weight, classes, batch_size=32)
+    inferencer = ClassificationInferencer(model, weight, classes, batch_size=16)
     predictions = read_object('../tmp/cla_dict_result.pkl')
-    # 分割结果
-    cla_result = ClassificationResult(predictions, (256, 256), 1)
-    print(cla_result)
+    # predictions = inferencer.inference_folder('E:\Projects\Carcinoma\#Temp\素材\cla_slices')
+    # write_object(predictions, '../tmp/cla_dict_result.pkl')
+    # 分类结果
+    cla_result = ClassificationResult(predictions, (1024, 1024), 1)
+    print(cla_result.get_summary_table(classes))
+
+    show_image(cla_result.get_scaled_region_class(0, 0, 2048 * 16, 2048 * 16))
+    print(cla_result.get_scaled_region_result(0, 0, 2048 * 16, 2048 * 16))
+    show_image(cla_result.get_origin_region_class(0, 0, 2048 * 16, 2048 * 16))
+    print(cla_result.get_origin_region_result(0, 0, 2048 * 16, 2048 * 16))
+
+    show_image(cla_result.get_scaled_region_class(2048 * 16, 0, 4096 * 16, 2048 * 16))
+    print(cla_result.get_scaled_region_result(2048 * 16, 0, 4096 * 16, 2048 * 16))
+    show_image(cla_result.get_origin_region_class(2048 * 16, 0, 4096 * 16, 2048 * 16))
+    print(cla_result.get_origin_region_result(2048 * 16, 0, 4096 * 16, 2048 * 16))
+
+    show_image(cla_result.get_scaled_region_class(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
+    print(cla_result.get_scaled_region_result(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
+    show_image(cla_result.get_origin_region_class(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
+    print(cla_result.get_origin_region_result(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
+
+    show_image(cla_result.get_scaled_region_class(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    print(cla_result.get_scaled_region_result(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    show_image(cla_result.get_origin_region_class(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    print(cla_result.get_origin_region_result(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+
+    show_image(cla_result.get_scaled_region_class(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    print(cla_result.get_scaled_region_result(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    show_image(cla_result.get_origin_region_class(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    print(cla_result.get_origin_region_result(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+
+    show_image(cla_result.get_scaled_region_class(3072 * 16 + 367, 0 * 16 + 569, 5120 * 16 - 568, 2048 * 16 - 1023))
+    show_image(cla_result.get_origin_region_class(3072 * 16 + 367, 0 * 16 + 569, 5120 * 16 - 568, 2048 * 16 - 1023))
+
+    show_image(cla_result.get_scaled_region_class(3072 * 16 - 367, 0 * 16 - 569, 5120 * 16 + 568, 2048 * 16 + 1023))
+    show_image(cla_result.get_origin_region_class(3072 * 16 - 367, 0 * 16 - 569, 5120 * 16 + 568, 2048 * 16 + 1023))
+
+    print('unit test is done!')

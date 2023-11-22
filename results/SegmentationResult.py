@@ -37,16 +37,22 @@ class SegmentationResult(Result):
         self.results = results
         self.counts = counts
 
-    def get_summary(self, classes: list):
+    def get_summary_table(self, classes: list):
         """
         统计信息
         :param classes: 种类信息，列表
         :return:
         """
-        idx_to_class = {idx: clazz for idx, clazz in enumerate(classes)}
-        count_res = {idx_to_class[i]: count for i, count in self.counts.items()}
-        ratio_res = {idx_to_class[i]: count / sum(self.counts.values()) for i, count in self.counts.items()}
-        return count_res, ratio_res
+        # idx_to_class = {idx: clazz for idx, clazz in enumerate(classes)}
+        # count_res = {idx_to_class[i]: count for i, count in self.counts.items()}
+        # ratio_res = {idx_to_class[i]: count / sum(self.counts.values()) for i, count in self.counts.items()}
+        count_res = [self.counts.get(cla_idx, 0) for cla_idx in range(len(classes))]
+        ratio_res = [count / sum(count_res) for count in count_res]
+        classes_str = '\t'.join(list(map(str, ['分割'] + classes)))
+        count_str = '\t'.join(list(map(str, ['计数'] + count_res)))
+        ratio_str = '\t'.join(list(map(str, ['占比'] + ratio_res)))
+        res = '\n'.join([classes_str, count_str, ratio_str])
+        return res
 
     def get_scaled_region_tensor(self, scaled_x1: int, scaled_y1: int, scaled_x2: int, scaled_y2: int):
         """
@@ -121,5 +127,34 @@ if __name__ == '__main__':
     weight = '../weights/seg_model.pth'
     inferencer = SegmentationInferencer(model, weight, classes, batch_size=2)
     predictions = read_object('../tmp/seg_dict_result.pkl')
+    # predictions = inferencer.inference_folder('E:\Projects\Carcinoma\#Temp\素材\seg_slices')
+    # write_object(predictions, '../tmp/seg_dict_result.pkl')
     seg_result = SegmentationResult(predictions, (2048, 2048), 16)
-    print(seg_result)
+    print(seg_result.get_summary_table(classes))
+
+    show_image(seg_result.get_scaled_region_tensor(0, 0, 2048, 2048))
+    print(seg_result.get_scaled_region_result(0, 0, 2048, 2048))
+    show_image(seg_result.get_origin_region_tensor(0, 0, 2048 * 16, 2048 * 16))
+    print(seg_result.get_origin_region_result(0, 0, 2048 * 16, 2048 * 16))
+
+    show_image(seg_result.get_scaled_region_tensor(2048, 0, 4096, 2048))
+    print(seg_result.get_scaled_region_result(2048, 0, 4096, 2048))
+    show_image(seg_result.get_origin_region_tensor(2048 * 16, 0, 4096 * 16, 2048 * 16))
+    print(seg_result.get_origin_region_result(2048 * 16, 0, 4096 * 16, 2048 * 16))
+
+    show_image(seg_result.get_scaled_region_tensor(3072, 0, 4096, 2048))
+    print(seg_result.get_scaled_region_result(3072, 0, 4096, 2048))
+    show_image(seg_result.get_origin_region_tensor(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
+    print(seg_result.get_origin_region_result(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
+
+    show_image(seg_result.get_scaled_region_tensor(4096, 0, 5120, 2048))
+    print(seg_result.get_scaled_region_result(4096, 0, 5120, 2048))
+    show_image(seg_result.get_origin_region_tensor(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    print(seg_result.get_origin_region_result(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+
+    show_image(seg_result.get_scaled_region_tensor(3072, 0, 5120, 2048))
+    print(seg_result.get_scaled_region_result(3072, 0, 5120, 2048))
+    show_image(seg_result.get_origin_region_tensor(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    print(seg_result.get_origin_region_result(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+
+    print('unit test is done!')
