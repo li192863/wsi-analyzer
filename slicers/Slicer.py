@@ -85,7 +85,7 @@ class Slicer(ABC):
             # 获取文件存放路径以及文件名
             filepath, filename = os.path.split(file)
             # 获取存放图片输出目录目录名
-            image_folder_name = ''.join(filename.split('.')[:-1])
+            image_folder_name = '.'.join(filename.split('.')[:-1])
             # 获取输出切片的切片文件夹
             if result_folder is None:
                 image_dir = os.path.join(filepath, image_folder_name)
@@ -105,7 +105,7 @@ class Slicer(ABC):
             rows, cols = height // self.slice_height, width // self.slice_width
         else:
             rows, cols = math.ceil(height / self.slice_height), math.ceil(width / self.slice_width)
-        assert rows > 0 and cols > 0
+        assert rows >= 0 and cols >= 0
         return rows, cols
 
     @abstractmethod

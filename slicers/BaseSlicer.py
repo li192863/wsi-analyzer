@@ -62,6 +62,15 @@ class BaseSlicer(Slicer):
 
 
 if __name__ == '__main__':
-    file = r"C:\Users\ChestnutLee\Desktop\Tom-202308172029526416.jpg"
-    slicer = BaseSlicer([100, 200], down_sample=1, drop_last=False)
-    slicer.file_to_slices(file, result_folder='E:/')
+    file = r"E:\test_folder\iphone14.png"
+    # slicer = BaseSlicer([10, 20], down_sample=1, drop_last=False, prefix='test_prefix', suffix='.png')
+    # slicer.file_to_slices(file)
+    # slicer = BaseSlicer([10, 20], down_sample=2, drop_last=False, prefix='test_prefix_', suffix='.jpg')
+    # slicer.file_to_slices(file, image_dir=r"E:\test_folder\iphone14\test_slices_d2")
+    # slicer = BaseSlicer([24, 24], down_sample=3, drop_last=False, prefix='', suffix='.jpg')
+    # slicer.file_to_slices(file, image_dir=r"E:\test_folder\iphone14\test_slices_d3")
+    # slicer = BaseSlicer([24, 24], down_sample=16, drop_last=False, prefix='', suffix='.jpg')
+    # slicer.file_to_slices(file, result_folder=r"E:\test_folder\iphone14\test_slices_d3_target")
+    # slicer = BaseSlicer([24, 24], down_sample=16, drop_last=True, prefix='', suffix='.jpg')
+    # slicer.file_to_slices(file, result_folder=r"E:\test_folder\iphone14\test_slices_d16_target_drop_last")
+    print('unit test is done!')

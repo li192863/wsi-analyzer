@@ -70,6 +70,15 @@ class VipsSlicer(Slicer):
 
 
 if __name__ == '__main__':
-    file = r"E:\Projects\Carcinoma\#Temp\test\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78.svs"
-    slicer = VipsSlicer([892, 892], down_sample=1, drop_last=True)
-    slicer.file_to_slices(file)
+    file = r"E:\test_folder\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78.svs"
+    # slicer = VipsSlicer([1024, 2048], down_sample=1, drop_last=False, prefix='test_prefix', suffix='.png')
+    # slicer.file_to_slices(file)
+    # slicer = VipsSlicer([1024, 2048], down_sample=2, drop_last=False, prefix='test_prefix_', suffix='.jpg')
+    # slicer.file_to_slices(file, image_dir=r"E:\test_folder\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78\test_slices_d2")
+    # slicer = VipsSlicer([1024, 2048], down_sample=3, drop_last=False, prefix='', suffix='.jpg')
+    # slicer.file_to_slices(file, image_dir=r"E:\test_folder\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78\test_slices_d3")
+    # slicer = VipsSlicer([2048, 2048], down_sample=16, drop_last=False, prefix='', suffix='.jpg')
+    # slicer.file_to_slices(file, result_folder=r"E:\test_folder\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78\test_slices_d3_target")
+    # slicer = VipsSlicer([2048, 2048], down_sample=16, drop_last=True, prefix='', suffix='.jpg')
+    # slicer.file_to_slices(file, result_folder=r"E:\test_folder\TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78\test_slices_d16_target_drop_last")
+    print('unit test is done!')
