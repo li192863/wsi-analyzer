@@ -72,11 +72,16 @@ class SegmentationInferencer(Inferencer):
 
 if __name__ == '__main__':
     from model import get_seg_model
-
     classes = ['_background_', 'Normal', 'Tumor']
     model = get_seg_model(classes)
     weight = '../weights/seg_model.pth'
-    inferencer = SegmentationInferencer(model, weight, classes, inference_size=(1024, 1024),
-                                        required_size=(3000, 3000), batch_size=2)
-    predictions = inferencer.inference_folder(r'E:\Projects\Carcinoma\#Temp\素材\seg_slices')
-    print(predictions)
+    # inferencer = SegmentationInferencer(model, weight, classes, inference_size=(1024, 512), required_size=(3000, 4000), batch_size=2)
+    # predictions = inferencer.inference_folder(r'E:\test_folder\TCGA-2Y-A9H5-01Z-00-DX108348C3C-A16F-45F6-8AE9-D0613268D703\seg_slices')
+    # print(predictions)
+    # inferencer = SegmentationInferencer(model, weight, classes, inference_size=(1024, 1024), required_size=(2048, 2048), batch_size=2, device='cpu')
+    # predictions = inferencer.inference_folder(r'E:\test_folder\TCGA-2Y-A9H5-01Z-00-DX108348C3C-A16F-45F6-8AE9-D0613268D703\seg_slices')
+    # print(predictions)
+    # inferencer = SegmentationInferencer(model, weight, classes, inference_size=(1024, 1024), required_size=(2048, 2048), batch_size=4, device='cpu')
+    # predictions = inferencer.inference_folder(r'E:\test_folder\TCGA-2Y-A9H5-01Z-00-DX108348C3C-A16F-45F6-8AE9-D0613268D703\seg_slices')
+    # print(predictions)
+    print('unit test is done!')

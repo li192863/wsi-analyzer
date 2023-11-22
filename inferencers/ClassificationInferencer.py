@@ -73,11 +73,15 @@ class ClassificationInferencer(Inferencer):
 if __name__ == '__main__':
     # 模型
     from model import get_cla_model
-
     classes = ['出血', '坏死', '实质', '淋巴', '空泡', '空白', '间质']
     model = get_cla_model(classes)
     weight = '../weights/cla_model.pth'
-    transform = ClassificationPresetEval(resize_size=256)
-    inferencer = ClassificationInferencer(model, weight, classes, batch_size=32, inference_size=(256, 256))
-    predictions = inferencer.inference_folder(r'E:\Projects\Carcinoma\#Temp\素材\cla_slices')
-    print(predictions)
+    # inferencer = ClassificationInferencer(model, weight, classes, batch_size=32, inference_size=(256, 256))
+    # predictions = inferencer.inference_folder(r'E:\test_folder\TCGA-2Y-A9H5-01Z-00-DX108348C3C-A16F-45F6-8AE9-D0613268D703\cla_slices')
+    # print(predictions)
+    # inferencer = ClassificationInferencer(model, weight, classes, batch_size=16, inference_size=(255, 250), required_size=[512, 200])
+    # predictions = inferencer.inference_folder(r'E:\test_folder\TCGA-2Y-A9H5-01Z-00-DX108348C3C-A16F-45F6-8AE9-D0613268D703\cla_slices')
+    # inferencer = ClassificationInferencer(model, weight, classes, batch_size=64, inference_size=(255, 250), required_size=[512, 200], device='cpu')
+    # predictions = inferencer.inference_folder(r'E:\test_folder\TCGA-2Y-A9H5-01Z-00-DX108348C3C-A16F-45F6-8AE9-D0613268D703\cla_slices')
+    # print(predictions)
+    print('unit test is done!')
