@@ -1,6 +1,7 @@
 import numpy as np
 
 from results.Result import Result
+from utils import write_image
 
 
 class SegmentationResult(Result):
@@ -53,6 +54,36 @@ class SegmentationResult(Result):
         ratio_str = '\t'.join(list(map(str, ['占比'] + ratio_res)))
         res = '\n'.join([classes_str, count_str, ratio_str])
         return res
+
+    def get_summary_image(self, origin_size, save_path=None, show_image=False, plot_kwargs=dict(), save_kwargs=dict()):
+        """
+        获取统计图片
+        :param origin_size:
+        :return:
+        """
+        tensor = self.get_origin_region_tensor(0, 0, *origin_size)
+        write_image(
+            tensor,
+            save_path=save_path,
+            show_image=show_image,
+            plot_kwargs=plot_kwargs,
+            save_kwargs=save_kwargs
+        )
+
+    def get_summary_contour(self, origin_size, save_path=None, show_image=False, plot_kwargs=dict(), save_kwargs=dict()):
+        """
+        获取统计图片
+        :param origin_size:
+        :return:
+        """
+        tensor = self.get_origin_region_tensor(0, 0, *origin_size)
+        write_contour(
+            tensor,
+            save_path=save_path,
+            show_image=show_image,
+            plot_kwargs=plot_kwargs,
+            save_kwargs=save_kwargs
+        )
 
     def get_scaled_region_tensor(self, scaled_x1: int, scaled_y1: int, scaled_x2: int, scaled_y2: int):
         """
@@ -132,29 +163,29 @@ if __name__ == '__main__':
     seg_result = SegmentationResult(predictions, (2048, 2048), 16)
     print(seg_result.get_summary_table(classes))
 
-    show_image(seg_result.get_scaled_region_tensor(0, 0, 2048, 2048))
+    write_image(seg_result.get_scaled_region_tensor(0, 0, 2048, 2048))
     print(seg_result.get_scaled_region_result(0, 0, 2048, 2048))
-    show_image(seg_result.get_origin_region_tensor(0, 0, 2048 * 16, 2048 * 16))
+    write_image(seg_result.get_origin_region_tensor(0, 0, 2048 * 16, 2048 * 16))
     print(seg_result.get_origin_region_result(0, 0, 2048 * 16, 2048 * 16))
 
-    show_image(seg_result.get_scaled_region_tensor(2048, 0, 4096, 2048))
+    write_image(seg_result.get_scaled_region_tensor(2048, 0, 4096, 2048))
     print(seg_result.get_scaled_region_result(2048, 0, 4096, 2048))
-    show_image(seg_result.get_origin_region_tensor(2048 * 16, 0, 4096 * 16, 2048 * 16))
+    write_image(seg_result.get_origin_region_tensor(2048 * 16, 0, 4096 * 16, 2048 * 16))
     print(seg_result.get_origin_region_result(2048 * 16, 0, 4096 * 16, 2048 * 16))
 
-    show_image(seg_result.get_scaled_region_tensor(3072, 0, 4096, 2048))
+    write_image(seg_result.get_scaled_region_tensor(3072, 0, 4096, 2048))
     print(seg_result.get_scaled_region_result(3072, 0, 4096, 2048))
-    show_image(seg_result.get_origin_region_tensor(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
+    write_image(seg_result.get_origin_region_tensor(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
     print(seg_result.get_origin_region_result(3072 * 16, 0 * 16, 4096 * 16, 2048 * 16))
 
-    show_image(seg_result.get_scaled_region_tensor(4096, 0, 5120, 2048))
+    write_image(seg_result.get_scaled_region_tensor(4096, 0, 5120, 2048))
     print(seg_result.get_scaled_region_result(4096, 0, 5120, 2048))
-    show_image(seg_result.get_origin_region_tensor(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    write_image(seg_result.get_origin_region_tensor(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
     print(seg_result.get_origin_region_result(4096 * 16, 0 * 16, 5120 * 16, 2048 * 16))
 
-    show_image(seg_result.get_scaled_region_tensor(3072, 0, 5120, 2048))
+    write_image(seg_result.get_scaled_region_tensor(3072, 0, 5120, 2048))
     print(seg_result.get_scaled_region_result(3072, 0, 5120, 2048))
-    show_image(seg_result.get_origin_region_tensor(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
+    write_image(seg_result.get_origin_region_tensor(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
     print(seg_result.get_origin_region_result(3072 * 16, 0 * 16, 5120 * 16, 2048 * 16))
 
     print('unit test is done!')
