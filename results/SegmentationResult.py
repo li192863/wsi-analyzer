@@ -6,6 +6,7 @@ from utils import write_image
 
 class SegmentationResult(Result):
     """ 分割结果 """
+    default_value = 0
     def __init__(self, dict_results, slice_size, down_sample, naming_regex=r'd(\d+)_r(\d+)_c(\d+)\..*'):
         """
         初始化结果对象
