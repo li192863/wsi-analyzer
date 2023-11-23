@@ -1,8 +1,7 @@
-import math
-
 import numpy as np
 
 from results import SegmentationResult, ClassificationResult
+from utils import get_inferencer_size
 
 
 class ResultMerger(object):
@@ -37,36 +36,20 @@ class ResultMerger(object):
         准备图片尺寸相关信息
         :return:
         """
-        if self.drop_last:
-            # 分割相关信息
-            self.seg_scaled_width, self.seg_scaled_height = \
-                self.origin_width // self.seg_down_sample, \
-                self.origin_height // self.seg_down_sample
-            self.seg_rows, self.seg_cols = \
-                math.ceil(self.seg_scaled_height / self.seg_slice_height), \
-                math.ceil(self.seg_scaled_width / self.seg_slice_width)
-            # 分类相关信息
-            self.cla_scaled_width, self.cla_scaled_height = \
-                self.origin_width // self.cla_down_sample, \
-                self.origin_height // self.cla_down_sample
-            self.cla_rows, self.cla_cols = \
-                math.ceil(self.cla_scaled_height / self.cla_slice_height), \
-                math.ceil(self.cla_scaled_width / self.cla_slice_width)
-        else:
-            # 分割相关信息
-            self.seg_scaled_width, self.seg_scaled_height = \
-                round(self.origin_width / self.seg_down_sample), \
-                round(self.origin_height / self.seg_down_sample)
-            self.seg_rows, self.seg_cols = \
-                math.ceil(self.seg_scaled_height / self.seg_slice_height), \
-                math.ceil(self.seg_scaled_width / self.seg_slice_width)
-            # 分类相关信息
-            self.cla_scaled_width, self.cla_scaled_height = \
-                round(self.origin_width / self.cla_down_sample), \
-                round(self.origin_height / self.cla_down_sample)
-            self.cla_rows, self.cla_cols = \
-                math.ceil(self.cla_scaled_height / self.cla_slice_height), \
-                math.ceil(self.cla_scaled_width / self.cla_slice_width)
+        self.seg_scaled_width, self.seg_scaled_height, self.seg_cols, self.seg_rows = get_inferencer_size(
+            self.origin_size,
+            self.seg_down_sample,
+            self.seg_result.slice_size,
+            self.drop_last,
+            type='size'
+        )
+        self.cla_scaled_width, self.cla_scaled_height, self.cla_cols, self.cla_rows = get_inferencer_size(
+            self.origin_size,
+            self.cla_down_sample,
+            self.cla_result.slice_size,
+            self.drop_last,
+            type='size'
+        )
 
     def scan_result(self):
         """

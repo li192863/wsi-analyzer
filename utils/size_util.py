@@ -1,0 +1,159 @@
+import math
+import os
+
+import matplotlib.pyplot as plt
+
+vipshome = os.path.join(os.getcwd(), '../vips-dev-8.14', 'bin')
+os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
+import pyvips  # 导入pyvips包
+
+plt.style.use('_mpl-gallery-nogrid')
+
+
+def get_image_size(source, type='file'):
+    """
+    获取图片真实大小
+    :param source: 图片文件，图片对象，图片尺寸
+    :param type: source的类型，可以为 'file', 'image', 'size'
+    :return: [origin_width, origin_height]
+    """
+    if type == 'file':
+        image = pyvips.Image.new_from_file(source)
+        return image.width, image.height
+    elif type == 'image':
+        assert hasattr(source, 'width') and hasattr(source, 'height')
+        return source.width, source.height
+    elif type == 'size':
+        return source[0], source[1]
+    else:
+        raise ValueError(f'{repr(type)}类型暂不支持！')
+
+
+def get_scaled_size(source, down_sample, type='file'):
+    """
+    获取降采样后图片大小
+    :param source: 图片文件，图片对象，图片尺寸
+    :param down_sample: 降采样倍数
+    :param type: source的类型，可以为 'file', 'image', 'size'
+    :return: [scaled_width, scaled_height]
+    """
+    origin_width, origin_height = get_image_size(source, type)
+    scaled_width, scaled_height = round(origin_width / down_sample), round(origin_height / down_sample)
+    return scaled_width, scaled_height
+
+
+def get_boxed_size(source, slice_size, drop_last=False, type='file'):
+    """
+    获取图片切片后的行数和列数
+    :param source: 图片文件，图片对象，图片尺寸
+    :param slice_size: [slice_width, slice_height]
+    :param drop_last: 是否舍弃边缘
+    :param type: source的类型，可以为 'file', 'image', 'size'
+    :return: [cols, rows]
+    """
+    # 获取切片前宽高
+    width, height = get_image_size(
+        source,
+        type
+    )
+    # 获取单个切片宽高
+    slice_width, slice_height = slice_size
+    # 获取切片后行列
+    cols = width // slice_width if drop_last else math.ceil(width / slice_width)
+    rows = height // slice_height if drop_last else math.ceil(height / slice_height)
+    return cols, rows
+
+
+def get_slicer_size(source, down_sample, slice_size, drop_last, type='file'):
+    """
+    获取经过slicer模块后的尺寸信息（降采样 -> 裁切）
+    :param source: 图片文件，图片对象，图片尺寸
+    :param down_sample: 降采样倍数
+    :param slice_size: 是否舍弃边缘
+    :param drop_last: 是否舍弃边缘
+    :param type: source的类型，可以为 'file', 'image', 'size'
+    :return: [scaled_width, scaled_height, cols, rows]
+    """
+    # 获取原始图片宽高
+    origin_width, origin_height = get_image_size(
+        source,
+        type
+    )
+    # 获取降采样后宽高
+    scaled_width, scaled_height = get_scaled_size(
+        (origin_width, origin_height),
+        down_sample,
+        type='size'
+    )
+    # 获取经切片后宽高
+    cols, rows = get_boxed_size(
+        (scaled_width, scaled_height),
+        slice_size,
+        drop_last,
+        type='size'
+    )
+    return scaled_width, scaled_height, cols, rows
+
+
+def get_inferencer_size(source, down_sample, slice_size, drop_last, type='file'):
+    """
+    获取经过inferencer模块后的尺寸信息（降采样 -> 裁切 -> 填充）
+    :param source: 图片文件，图片对象，图片尺寸
+    :param down_sample: 降采样倍数
+    :param slice_size: 是否舍弃边缘
+    :param drop_last: 是否舍弃边缘
+    :param type: source的类型，可以为 'file', 'image', 'size'
+    :return: [scaled_width, scaled_height, cols, rows]
+    """
+    # 获取经切片后宽高
+    scaled_width, scaled_height, cols, rows = get_slicer_size(
+        source,
+        down_sample,
+        slice_size,
+        drop_last,
+        type
+    )
+    # 获取单个切片宽高
+    slice_width, slice_height = slice_size
+    # 获取经填充后宽高
+    scaled_width, scaled_height = cols * slice_width, rows * slice_height
+    return scaled_width, scaled_height, cols, rows
+
+
+def _prepare_size_info(self):
+    """
+    准备图片尺寸相关信息
+    :return:
+    """
+    self.seg_scaled_width, self.seg_scaled_height, self.seg_cols, self.seg_rows = get_inferencer_size(self.origin_size, self.seg_down_sample, self.seg_slice_size, self.drop_last, type='size')
+    self.cla_scaled_width, self.cla_scaled_height, self.cla_cols, self.cla_rows = get_inferencer_size(self.origin_size, self.cla_down_sample, self.cla_slice_size, self.drop_last, type='size')
+    # if self.drop_last:
+    #     # 分割相关信息
+    #     self.seg_scaled_width, self.seg_scaled_height = \
+    #         self.origin_width // self.seg_down_sample, \
+    #         self.origin_height // self.seg_down_sample
+    #     self.seg_rows, self.seg_cols = \
+    #         math.ceil(self.seg_scaled_height / self.seg_slice_height), \
+    #         math.ceil(self.seg_scaled_width / self.seg_slice_width)
+    #     # # 分类相关信息
+    #     # self.cla_scaled_width, self.cla_scaled_height = \
+    #     #     self.origin_width // self.cla_down_sample, \
+    #     #     self.origin_height // self.cla_down_sample
+    #     # self.cla_rows, self.cla_cols = \
+    #     #     math.ceil(self.cla_scaled_height / self.cla_slice_height), \
+    #     #     math.ceil(self.cla_scaled_width / self.cla_slice_width)
+    # else:
+    #     # 分割相关信息
+    #     self.seg_scaled_width, self.seg_scaled_height = \
+    #         round(self.origin_width / self.seg_down_sample), \
+    #         round(self.origin_height / self.seg_down_sample)
+    #     self.seg_rows, self.seg_cols = \
+    #         math.ceil(self.seg_scaled_height / self.seg_slice_height), \
+    #         math.ceil(self.seg_scaled_width / self.seg_slice_width)
+    #     # # 分类相关信息
+    #     # self.cla_scaled_width, self.cla_scaled_height = \
+    #     #     round(self.origin_width / self.cla_down_sample), \
+    #     #     round(self.origin_height / self.cla_down_sample)
+    #     # self.cla_rows, self.cla_cols = \
+    #     #     math.ceil(self.cla_scaled_height / self.cla_slice_height), \
+    #     #     math.ceil(self.cla_scaled_width / self.cla_slice_width)

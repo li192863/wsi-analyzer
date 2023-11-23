@@ -1,4 +1,3 @@
-import math
 import os
 from abc import ABC, abstractmethod
 from typing import Iterable
@@ -6,7 +5,7 @@ from typing import Iterable
 import numpy as np
 from PIL import Image
 
-from utils import make_directory
+from utils import make_directory, get_boxed_size
 
 
 class Slicer(ABC):
@@ -42,7 +41,7 @@ class Slicer(ABC):
         # 降采样
         down_sampled_image = self.down_sample_image(image, self.down_sample)
         # 裁切
-        rows, cols = self.get_rows_and_cols(down_sampled_image)
+        cols, rows = get_boxed_size(down_sampled_image, self.slice_size, self.drop_last, type='image')
         idx_len = max(len(str(rows)), len(str(cols)))
         # 创建文件夹，若未指定image_dir则存放至{result_folder}/{filename}下
         image_dir = self._prepare_image_dir(file, image_dir, result_folder)
@@ -93,20 +92,6 @@ class Slicer(ABC):
                 image_dir = os.path.join(result_folder, image_folder_name)
         image_dir = make_directory(image_dir)
         return image_dir
-
-    def get_rows_and_cols(self, image):
-        """
-        获取行数和列数
-        :return: [rows, cols]
-        """
-        assert hasattr(image, 'width') and hasattr(image, 'height')
-        width, height = image.width, image.height
-        if self.drop_last:
-            rows, cols = height // self.slice_height, width // self.slice_width
-        else:
-            rows, cols = math.ceil(height / self.slice_height), math.ceil(width / self.slice_width)
-        assert rows >= 0 and cols >= 0
-        return rows, cols
 
     @abstractmethod
     def get_image_array(self, image) -> np.ndarray:
