@@ -52,7 +52,7 @@ class InferencerBuilder(Builder):
             'weight': self.config.inferencer.segmentation.weight,
             'classes': self.config.inferencer.segmentation.classes,
             'inference_size': self.config.inferencer.segmentation.inference_size,  # [h, w]
-            'required_size': self.config.slicer.segmentation.slice_size[::-1],  # [w, h]
+            'required_size': self.config.slicer.segmentation.slice_size[::-1],  # [w, h] -> [h, w]
             'batch_size': self.config.inferencer.segmentation.batch_size,
             'device': self.config.inferencer.segmentation.device,
         }
@@ -65,7 +65,7 @@ class InferencerBuilder(Builder):
             'weight': self.config.inferencer.classification.weight,
             'classes': self.config.inferencer.classification.classes,
             'inference_size': self.config.inferencer.classification.inference_size,  # [h, w]
-            'required_size': self.config.slicer.classification.slice_size[::-1],  # [h, w]
+            'required_size': self.config.slicer.classification.slice_size[::-1],  # [w, h] -> [h, w]
             'batch_size': self.config.inferencer.classification.batch_size,
             'device': self.config.inferencer.classification.device,
         }
