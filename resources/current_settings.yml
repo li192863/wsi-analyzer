@@ -1,0 +1,68 @@
+basic:
+  auto_resume: true
+  filelist: []
+  force_inference: false
+  result_folder: ''
+inferencer:
+  classification:
+    batch_size: 16
+    classes:
+    - 出血
+    - 坏死
+    - 实质
+    - 淋巴
+    - 空泡
+    - 空白
+    - 间质
+    device: null
+    inference_size:
+    - 256
+    - 256
+    weight: ../weights/cla_model.pth
+  segmentation:
+    batch_size: 2
+    classes:
+    - 背景
+    - 正常
+    - 肿瘤
+    device: null
+    inference_size:
+    - 1024
+    - 1024
+    weight: ../weights/seg_model.pth
+result:
+  classification:
+    naming_regex: d(\d+)_r(\d+)_c(\d+)
+    summary_image:
+      plot_kwargs:
+        cmap: viridis
+      save_kwargs:
+        dpi: 1024
+      show_image: false
+  segmentation:
+    naming_regex: d(\d+)_r(\d+)_c(\d+)
+    summary_image:
+      plot_kwargs:
+        cmap: plasma
+      save_kwargs:
+        dpi: 1024
+      show_image: false
+slicer:
+  classification:
+    down_sample: 1
+    memory: true
+    prefix: ''
+    slice_size:
+    - 1024
+    - 1024
+    suffix: .jpg
+  drop_last: false
+  engine: vips
+  segmentation:
+    down_sample: 16
+    memory: true
+    prefix: ''
+    slice_size:
+    - 2048
+    - 2048
+    suffix: .jpg
