@@ -1,5 +1,6 @@
 import os
 import pickle
+import re
 import shutil
 
 import matplotlib.pyplot as plt
@@ -53,8 +54,7 @@ def read_text(file, encoding='utf-8'):
     :return:
     """
     with open(file, 'r', encoding=encoding) as f:
-        text = f.read()
-    return text
+        return f.read()
 
 
 def write_text(text, file, encoding='utf-8'):
@@ -67,7 +67,6 @@ def write_text(text, file, encoding='utf-8'):
     """
     with open(file, 'w', encoding=encoding) as f:
         f.write(text)
-    return text
 
 
 def read_config(config_file, encoding='utf-8'):
@@ -80,3 +79,50 @@ def read_config(config_file, encoding='utf-8'):
     with open(config_file, 'r', encoding=encoding) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)  # Loader为了更加安全
     return Dict(config)
+
+def write_config(config, file, encoding='utf-8'):
+    """
+    写入配置
+    :param config: 配置字典
+    :param file: 配置文件
+    :param encoding: 配置文件编码方式
+    :return:
+    """
+    config = config.to_dict() if isinstance(config, Dict) else config
+    with open(file, 'w', encoding=encoding) as f:
+        yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+
+
+def update_config(config_file, node_path, node_value, encoding='utf-8'):
+    """
+    写入配置
+    :param config_file: 配置文件
+    :param node_path: 节点位置
+    :param node_value: 新值
+    :param encoding: 配置文件编码方式
+    :return:
+    """
+    with open(config_file, 'r', encoding=encoding) as f:
+        lines = f.readlines()
+    # 读取注释信息
+    comments = {}
+    for i, line in enumerate(lines):
+        if re.match(r'^\s*#', line):
+            key = f'comment_{i}'
+            comments[key] = line
+
+    config = read_config(config_file, encoding)
+    node_list = node_path.split('.')
+    # 寻找节点
+    current_node = config
+    for node in node_list[:-1]:
+        current_node = current_node[node]
+    # 写入新值
+    current_node[node_list[-1]] = node_value
+
+
+
+if __name__ == '__main__':
+    config = read_config('../resources/settings.yml')
+    write_config(config.to_dict(), 'test.yml')
+    print(config)
