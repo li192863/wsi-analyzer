@@ -1,32 +1,32 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 
-block_cipher = None
-
-
 a = Analysis(
-    ['SlicerApplication.py'], # 入口文件
-    pathex=['ImageSlicer.py'],  # python模块
+    ['AnalyzerApplication.py'],
+    pathex=[
+        'E:/Projects/Carcinoma/analyzer'
+    ],
     binaries=[],
-    datas=[('./resources', './resources'), ('./vips-dev-8.14', './vips-dev-8.14')],  # 资源文件
-    hiddenimports=['PySide6.QtXml'],  # 隐式导入
+    datas=[
+#        ('./resources', '../resources'),
+#        ('./vips-dev-8.14', '../vips-dev-8.14'),
+#        ('./weights', '../weights')
+    ],
+    hiddenimports=['PySide6.QtXml'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=block_cipher,
+    excludes=['./build', './dist', './tmp'],
     noarchive=False,
 )
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+pyz = PYZ(a.pure)
 
 exe = EXE(
     pyz,
     a.scripts,
     [],
     exclude_binaries=True,
-    name='SlicerApplication',
+    name='AnalyzerApplication',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -42,10 +42,9 @@ exe = EXE(
 coll = COLLECT(
     exe,
     a.binaries,
-    a.zipfiles,
     a.datas,
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='SlicerApplication',
+    name='AnalyzerApplication',
 )

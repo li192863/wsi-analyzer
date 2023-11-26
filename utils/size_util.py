@@ -3,7 +3,7 @@ import os
 
 import matplotlib.pyplot as plt
 
-vipshome = os.path.join(os.getcwd(), '../vips-dev-8.14', 'bin')
+vipshome = os.path.join(os.getcwd(), './vips-dev-8.14', 'bin')
 os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
 import pyvips  # 导入pyvips包
 
@@ -118,42 +118,3 @@ def get_inferencer_size(source, down_sample, slice_size, drop_last, type='file')
     # 获取经填充后宽高
     scaled_width, scaled_height = cols * slice_width, rows * slice_height
     return scaled_width, scaled_height, cols, rows
-
-
-def _prepare_size_info(self):
-    """
-    准备图片尺寸相关信息
-    :return:
-    """
-    self.seg_scaled_width, self.seg_scaled_height, self.seg_cols, self.seg_rows = get_inferencer_size(self.origin_size, self.seg_down_sample, self.seg_slice_size, self.drop_last, type='size')
-    self.cla_scaled_width, self.cla_scaled_height, self.cla_cols, self.cla_rows = get_inferencer_size(self.origin_size, self.cla_down_sample, self.cla_slice_size, self.drop_last, type='size')
-    # if self.drop_last:
-    #     # 分割相关信息
-    #     self.seg_scaled_width, self.seg_scaled_height = \
-    #         self.origin_width // self.seg_down_sample, \
-    #         self.origin_height // self.seg_down_sample
-    #     self.seg_rows, self.seg_cols = \
-    #         math.ceil(self.seg_scaled_height / self.seg_slice_height), \
-    #         math.ceil(self.seg_scaled_width / self.seg_slice_width)
-    #     # # 分类相关信息
-    #     # self.cla_scaled_width, self.cla_scaled_height = \
-    #     #     self.origin_width // self.cla_down_sample, \
-    #     #     self.origin_height // self.cla_down_sample
-    #     # self.cla_rows, self.cla_cols = \
-    #     #     math.ceil(self.cla_scaled_height / self.cla_slice_height), \
-    #     #     math.ceil(self.cla_scaled_width / self.cla_slice_width)
-    # else:
-    #     # 分割相关信息
-    #     self.seg_scaled_width, self.seg_scaled_height = \
-    #         round(self.origin_width / self.seg_down_sample), \
-    #         round(self.origin_height / self.seg_down_sample)
-    #     self.seg_rows, self.seg_cols = \
-    #         math.ceil(self.seg_scaled_height / self.seg_slice_height), \
-    #         math.ceil(self.seg_scaled_width / self.seg_slice_width)
-    #     # # 分类相关信息
-    #     # self.cla_scaled_width, self.cla_scaled_height = \
-    #     #     round(self.origin_width / self.cla_down_sample), \
-    #     #     round(self.origin_height / self.cla_down_sample)
-    #     # self.cla_rows, self.cla_cols = \
-    #     #     math.ceil(self.cla_scaled_height / self.cla_slice_height), \
-    #     #     math.ceil(self.cla_scaled_width / self.cla_slice_width)

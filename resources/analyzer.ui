@@ -518,7 +518,7 @@
         <item>
          <widget class="QProgressBar" name="progressBar">
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
          </widget>
         </item>
@@ -670,6 +670,28 @@
     </font>
    </property>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>516</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>文件</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_about">
+    <property name="title">
+     <string>关于</string>
+    </property>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_about"/>
+  </widget>
   <action name="action_choose_file">
    <property name="checkable">
     <bool>false</bool>
@@ -699,6 +721,11 @@
   <action name="action_about">
    <property name="text">
     <string>关于作者</string>
+   </property>
+  </action>
+  <action name="actionguanyu">
+   <property name="text">
+    <string>guanyu</string>
    </property>
   </action>
  </widget>

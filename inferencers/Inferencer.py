@@ -91,7 +91,7 @@ class Inferencer(ABC):
         # 模型加载
         self.model = self.model.to(self.device)
         # 加载权重
-        self.model.load_state_dict(torch.load(weight))
+        self.model.load_state_dict(torch.load(weight, map_location=torch.device(self.device)))
 
     @abstractmethod
     def post_process(self, inputs: Tensor, outputs: Tensor) -> list:
@@ -137,11 +137,11 @@ class Inferencer(ABC):
         results = []
         self.model.eval()  # Sets the module in evaluation mode
         with torch.no_grad():  # Disabling gradient calculation
-            with tqdm(dataloader, desc='inference', total=len(dataloader)) as pbar:  # 进度条
-                for inputs in pbar:
-                    inputs = inputs.to(self.device)  # [b, c, h, w]
-                    outputs = self.model(inputs)  # [b, num_classes]
-                    results.extend(self.post_process(inputs, outputs))
+            # with tqdm(dataloader, desc='inference', total=len(dataloader)) as pbar:  # 进度条
+            for inputs in dataloader:
+                inputs = inputs.to(self.device)  # [b, c, h, w]
+                outputs = self.model(inputs)  # [b, num_classes]
+                results.extend(self.post_process(inputs, outputs))
         return dict(sorted({file: result for file, result in zip(files, results)}.items()))
 
     def inference_folder(self, folder: str) -> dict:

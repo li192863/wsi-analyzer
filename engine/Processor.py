@@ -1,5 +1,5 @@
 from builders import SlicerBuilder, InferencerBuilder, ResultBuilder
-from engine import FileProcessor
+from engine.FileProcessor import FileProcessor
 from utils import read_config
 
 
@@ -44,9 +44,9 @@ class Processor(object):
             raise ValueError('文件列表不能为空！')
         # 检查尺寸信息
         if self.seg_slice_width * self.seg_down_sample % (self.cla_slice_width * self.cla_down_sample) != 0:
-            raise ValueError('分割分类尺寸不匹配，请确保 分割切片宽x分割降采样 mod (分类切片宽x分类降采样) == 0')
+            raise ValueError('请确保 分割切片宽×分割降采样 mod (分类切片宽×分类降采样) == 0！')
         if self.seg_slice_height * self.seg_down_sample % (self.cla_slice_height * self.cla_down_sample) != 0:
-            raise ValueError('分割分类尺寸不匹配，请确保 分割切片高x分割降采样 mod (分类切片高x分类降采样) == 0')
+            raise ValueError('请确保 分割切片高×分割降采样 mod (分类切片高×分类降采样) == 0！')
 
     def _build_components(self):
         """

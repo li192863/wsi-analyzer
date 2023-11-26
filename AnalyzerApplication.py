@@ -1,15 +1,13 @@
 import sys
-from threading import Thread
 
 from PySide6 import QtWidgets
-from PySide6.QtCore import QThread, QUrl, Slot
+from PySide6.QtCore import QUrl, Slot
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import QApplication, QFileDialog
-from PySide6.scripts.metaobjectdump import Signal
 
 from ui.UI_Analyzer import Ui_Analyzer
 from ui.threads import ProcessThread
-from utils import read_config, write_config
+from utils import read_config
 
 
 class Analyzer(QtWidgets.QMainWindow):
@@ -28,7 +26,7 @@ class Analyzer(QtWidgets.QMainWindow):
         :return:
         """
         # 读取默认配置
-        self.default_config_file = '../resources/settings.yml'
+        self.default_config_file = './resources/settings.yml'
         self.config = read_config(self.default_config_file)
 
     def init_ui(self):
@@ -90,7 +88,6 @@ class Analyzer(QtWidgets.QMainWindow):
             caption='请选择一个或多个病理切片文件',
             filter='病理切片(*.svs *.jpg *.jpeg *.png *.tiff *.tif)'
         )
-        print(self.config.basic.filelist)
 
     def on_button_open_config_clicked(self):
         """ 打开配置被点击 """
@@ -117,52 +114,8 @@ class Analyzer(QtWidgets.QMainWindow):
         self.ui.statusbar.showMessage(value)
 
 
-
-
-
-
-
-# class ProcessableThread(QThread):
-#     """ 检测是否可以开始处理 """
-#     is_processable_signal = Signal(str)
-#     def __init__(self, ui, config):
-#         super(ProcessableThread, self).__init__()
-#         self.config = config
-
-    # def run(self): -> None:
-    #     try:
-
-
-    # def bind_events(self):
-    #     """
-    #     绑定事件
-    #     :return: 无
-    #     """
-        # self.ui.lineEdit_seg_slice_width.textChanged.connect(self.lineEdit_seg_slice_width_textChanged)
-
-
-# class AnalyzerEvents(object):
-#     def __init__(self, ui, config):
-#         self.ui = ui
-#         self.config = config
-#
-#     def write_config(method, config):
-#         def wrapper(self, *args, **kwargs):
-#             result = method(self, *args, **kwargs)
-#             write_config(self.)
-#             return result
-#         return wrapper
-#
-#     @write_config()
-#     def lineEdit_seg_slice_width_textChanged(self):
-#         self.config.slicer.slice_size[0] = self.ui.lineEdit_seg_slice_width.value()
-#
-#     def lineEdit
-#         self.config.slicer.slice_size[1] = self.ui.lineEdit_seg_slice_height.value()
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     analyzer = Analyzer()
     analyzer.show()
-    app.exec()
+    sys.exit(app.exec())

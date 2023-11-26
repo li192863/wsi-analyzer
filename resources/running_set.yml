@@ -1,7 +1,7 @@
 basic:
   auto_resume: true
   filelist:
-  - C:/Users/ChestnutLee/Desktop/签名.jpg
+  - E:/Projects/Carcinoma/#Temp/素材/TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78.svs
   force_inference: false
   result_folder: ''
   slicer:
@@ -17,22 +17,22 @@ inferencer:
     - 空泡
     - 空白
     - 间质
-    device: null
+    device: cpu
     inference_size:
     - 256
     - 256
-    weight: ../weights/cla_model.pth
+    weight: ./weights/cla_model.pth
   segmentation:
     batch_size: 2
     classes:
     - 背景
     - 正常
     - 肿瘤
-    device: null
+    device: cpu
     inference_size:
     - 1024
     - 1024
-    weight: ../weights/seg_model.pth
+    weight: ./weights/seg_model.pth
 result:
   classification:
     naming_regex: d(\d+)_r(\d+)_c(\d+)
@@ -56,7 +56,7 @@ slicer:
     memory: true
     prefix: ''
     slice_size:
-    - 512
+    - 1024
     - 1024
     suffix: .jpg
   drop_last: false

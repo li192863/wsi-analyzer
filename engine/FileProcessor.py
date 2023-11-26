@@ -152,7 +152,7 @@ class FileProcessor(object):
         生成报告
         :return:
         """
-        text = read_text('../resources/report.md')
+        text = read_text('./resources/report.md')
         res = text.format(
             filepath = self.filepath,
             filename = self.filename,

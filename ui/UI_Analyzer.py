@@ -32,7 +32,7 @@ class Ui_Analyzer(object):
         font.setFamilies([u"\u5fae\u8f6f\u96c5\u9ed1"])
         Analyzer.setFont(font)
         icon = QIcon()
-        icon.addFile(u"../resources/favicon.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"./resources/favicon.ico", QSize(), QIcon.Normal, QIcon.Off)
         Analyzer.setWindowIcon(icon)
         Analyzer.setWindowOpacity(1.000000000000000)
         self.action_choose_file = QAction(Analyzer)
