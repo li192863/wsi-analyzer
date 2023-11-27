@@ -1,6 +1,6 @@
-from engine.Resumer import Resumer
-from engine.Processor import Processor
-from engine.FileProcessor import FileProcessor
+from engine.resumer import Resumer
+from engine.processor import Processor
+from engine.file_processor import FileProcessor
 
 
 __all__ = [

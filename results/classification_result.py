@@ -1,6 +1,6 @@
 import numpy as np
 
-from results.Result import Result
+from results.result import Result
 from utils import write_image
 
 

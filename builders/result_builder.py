@@ -1,7 +1,7 @@
 from functools import partial
 from typing import Union
 
-from builders.Builder import Builder
+from builders.builder import Builder
 from results import Result, ClassificationResult, SegmentationResult, ResultMerger
 
 

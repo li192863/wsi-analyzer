@@ -1,7 +1,7 @@
-from builders.Builder import Builder
-from builders.SlicerBuilder import SlicerBuilder
-from builders.InferencerBuilder import InferencerBuilder
-from builders.ResultBuilder import ResultBuilder
+from builders.builder import Builder
+from builders.slicer_builder import SlicerBuilder
+from builders.inferencer_builder import InferencerBuilder
+from builders.result_builder import ResultBuilder
 
 
 __all__ = [

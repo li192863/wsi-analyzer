@@ -1,7 +1,7 @@
-from results.ClassificationResult import ClassificationResult
-from results.SegmentationResult import SegmentationResult
-from results.ResultMerger import ResultMerger
-from results.Result import Result
+from results.classification_result import ClassificationResult
+from results.segmentation_result import SegmentationResult
+from results.result_merger import ResultMerger
+from results.result import Result
 
 
 __all__ = [

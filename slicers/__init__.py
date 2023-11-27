@@ -1,6 +1,6 @@
-from slicers.Slicer import Slicer
-from slicers.BaseSlicer import BaseSlicer
-from slicers.VipsSlicer import VipsSlicer
+from slicers.slicer import Slicer
+from slicers.base_slicer import BaseSlicer
+from slicers.vips_slicer import VipsSlicer
 
 
 __all__ = [

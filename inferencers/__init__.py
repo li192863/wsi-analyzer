@@ -1,6 +1,6 @@
-from inferencers.Inferencer import Inferencer
-from inferencers.ClassificationInferencer import ClassificationInferencer
-from inferencers.SegmentationInferencer import SegmentationInferencer
+from inferencers.inferencer import Inferencer
+from inferencers.classification_inferencer import ClassificationInferencer
+from inferencers.segmentation_inferencer import SegmentationInferencer
 
 
 __all__ = [

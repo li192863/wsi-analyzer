@@ -7,7 +7,6 @@ import torchvision.transforms.functional as F
 from PIL import Image
 from torch import Tensor
 from torch.utils.data import DataLoader
-from tqdm import tqdm
 
 
 class FileListDataset(torch.utils.data.Dataset):

@@ -1,7 +1,7 @@
-from builders.Builder import Builder
+from builders.builder import Builder
 from inferencers import ClassificationInferencer, SegmentationInferencer, Inferencer
-from inferencers.ClassificationInferencer import ClassificationPresetEval
-from inferencers.SegmentationInferencer import SegmentationPresetEval
+from inferencers.classification_inferencer import ClassificationPresetEval
+from inferencers.segmentation_inferencer import SegmentationPresetEval
 from model import get_cla_model, get_seg_model
 
 

@@ -2,7 +2,7 @@ import torch
 from torch import Tensor
 from torchvision.transforms import InterpolationMode, transforms
 
-from inferencers.Inferencer import Inferencer
+from inferencers.inferencer import Inferencer
 
 
 class ClassificationPresetEval:

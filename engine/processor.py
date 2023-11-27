@@ -1,7 +1,7 @@
 import logging
 
 from builders import SlicerBuilder, InferencerBuilder, ResultBuilder
-from engine.FileProcessor import FileProcessor
+from engine.file_processor import FileProcessor
 from utils import read_config
 
 

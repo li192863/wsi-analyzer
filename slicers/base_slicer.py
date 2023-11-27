@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 
-from slicers.Slicer import Slicer
+from slicers.slicer import Slicer
 
 
 class BaseSlicer(Slicer):

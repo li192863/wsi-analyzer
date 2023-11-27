@@ -3,7 +3,7 @@ import torch.nn.functional as F
 from torch import Tensor
 from torchvision.transforms import InterpolationMode, transforms
 
-from inferencers.Inferencer import Inferencer
+from inferencers.inferencer import Inferencer
 
 
 class SegmentationPresetEval:

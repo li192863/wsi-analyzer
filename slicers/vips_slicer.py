@@ -9,7 +9,7 @@ import pyvips  # 导入pyvips包
 
 from pyvips import Image
 
-from slicers.Slicer import Slicer
+from slicers.slicer import Slicer
 
 class VipsSlicer(Slicer):
     """ 基于pyvips实现的切片器 """

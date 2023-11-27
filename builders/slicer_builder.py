@@ -1,4 +1,4 @@
-from builders.Builder import Builder
+from builders.builder import Builder
 from slicers import Slicer, BaseSlicer, VipsSlicer
 
 
