@@ -23,6 +23,7 @@ class SegmentationResult(Result):
         :return: 无
         """
         slice_paths, results, counts = dict(), dict(), dict()
+        self.logger.info('开始扫描分割结果...')
         for file, result in self.dict_results.items():
             # 解析路径
             d, r, c = self.parse_path(file)
@@ -35,6 +36,7 @@ class SegmentationResult(Result):
             # counts
             for val, cnt in zip(unique_vals, cnts):
                 counts[val] = counts.get(val, 0) + cnt
+        self.logger.info('分割结果扫描完成！')
         self.slice_paths = slice_paths
         self.results = results
         self.counts = counts

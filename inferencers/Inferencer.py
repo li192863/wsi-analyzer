@@ -1,3 +1,4 @@
+import logging
 import os
 from abc import ABC, abstractmethod
 
@@ -85,6 +86,7 @@ class Inferencer(ABC):
         self.required_size = required_size  # 图片的高宽(h, w)，默认以图片列表第一张图片为输出尺寸
         self.batch_size = batch_size
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
+        self.logger = logging.getLogger(name='file-logger')
         # 构建映射
         self.class_to_idx = {clazz: idx for idx, clazz in enumerate(self.classes)}
         self.idx_to_class = {idx: clazz for idx, clazz in enumerate(self.classes)}
@@ -122,6 +124,7 @@ class Inferencer(ABC):
         else:
             required_size = self.required_size
         transform = self.transform_cls(resize_size=resize_size)
+        self.logger.debug(f'推理变形尺寸为{required_size}')
         dataset = FileListDataset(files, required_size, transform=transform)
         dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
         return dataloader
@@ -135,13 +138,16 @@ class Inferencer(ABC):
         dataloader = self.build_dataloader(files)
         # 逐批次预测
         results = []
+        self.logger.info('开始推理...')
         self.model.eval()  # Sets the module in evaluation mode
         with torch.no_grad():  # Disabling gradient calculation
             # with tqdm(dataloader, desc='inference', total=len(dataloader)) as pbar:  # 进度条
-            for inputs in dataloader:
+            for i, inputs in enumerate(dataloader):
                 inputs = inputs.to(self.device)  # [b, c, h, w]
                 outputs = self.model(inputs)  # [b, num_classes]
                 results.extend(self.post_process(inputs, outputs))
+                self.logger.info(f'推理完成度{(i + 1) * 100 / len(dataloader):.2f}%')
+        self.logger.info('推理完成！')
         return dict(sorted({file: result for file, result in zip(files, results)}.items()))
 
     def inference_folder(self, folder: str) -> dict:

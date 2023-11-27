@@ -1,3 +1,4 @@
+import logging
 from copy import deepcopy
 
 
@@ -9,6 +10,7 @@ class Resumer(object):
     def __init__(self, file_path, config):
         self.file_path = file_path
         self.config = config
+        self.logger = logging.getLogger(name='file-logger')
         # 状态信息
         self.set_state(False, False, False, False)
 
@@ -31,6 +33,11 @@ class Resumer(object):
             self.cla_inference_done = cla_inference_done
         # 写入指定位置
         write_object(self, self.file_path)
+        self.logger.info(
+            f'更新状态信息'
+            f'{self.seg_slice_done, self.cla_slice_done, self.seg_inference_done, self.cla_inference_done}'
+            f'至{self.file_path}！'
+        )
         return self.seg_slice_done, self.cla_slice_done, self.seg_inference_done, self.cla_inference_done
 
     def resume_self(self, new_file_path, new_config):
@@ -39,6 +46,7 @@ class Resumer(object):
         :param new_config: 新配置文件
         :return: self
         """
+        self.logger.info('尝试进行断点恢复...')
         # 更新配置信息
         old_config = deepcopy(self.config)
         # 更新状态信息
@@ -47,6 +55,7 @@ class Resumer(object):
         self.file_path = new_file_path
         self.config = new_config
         self.set_state()  # 写入磁盘
+        self.logger.info('断点恢复完成！')
         return self
 
     def resume_state(self, old_config, new_config):
@@ -66,6 +75,10 @@ class Resumer(object):
         # 检查配置是否更改
         res = self.has_config_changed(old_config, new_config)
         seg_slice_cfg_changed, cla_slice_cfg_changed, seg_inference_cfg_changed, cla_inference_cfg_changed = res
+        self.logger.debug(
+            f'配置变化信息'
+            f'{seg_slice_cfg_changed, cla_slice_cfg_changed, seg_inference_cfg_changed, cla_inference_cfg_changed}'
+        )
         # 更新自身状态信息
         self.seg_slice_done = self.seg_slice_done and not seg_slice_cfg_changed
         self.cla_slice_done = self.cla_slice_done and not cla_slice_cfg_changed

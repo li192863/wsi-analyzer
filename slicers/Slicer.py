@@ -1,3 +1,4 @@
+import logging
 import os
 from abc import ABC, abstractmethod
 from typing import Iterable
@@ -23,6 +24,7 @@ class Slicer(ABC):
         self.down_sample = down_sample
         self.prefix = prefix
         self.suffix = suffix
+        self.logger = logging.getLogger('file-logger')
 
         self.slice_width, self.slice_height = self.slice_size
 
@@ -46,8 +48,10 @@ class Slicer(ABC):
         # 创建文件夹，若未指定image_dir则存放至{result_folder}/{filename}下
         image_dir = self._prepare_image_dir(file, image_dir, result_folder)
         # 转换图片为数组
+        self.logger.info('开始读取图片...')
         image_arr = self.get_image_array(down_sampled_image)
         # 遍历图片
+        self.logger.info('开始写入...')
         for r in reversed(range(rows)):
             for c in reversed(range(cols)):
                 # 获取图片边界
@@ -60,13 +64,17 @@ class Slicer(ABC):
                 # 保留符合预期图片
                 if self.filter_image(cropped_image):
                     image = Image.fromarray(cropped_image).convert('RGB')
-                    image_name = self.get_slice_name(prefix=self.prefix, suffix=self.suffix,
-                                                     d=self.down_sample,
-                                                     r=str(r).zfill(idx_len),
-                                                     c=str(c).zfill(idx_len)
-                                                     )
+                    image_name = self.get_slice_name(
+                        prefix=self.prefix,
+                        suffix=self.suffix,
+                        d=self.down_sample,
+                        r=str(r).zfill(idx_len),
+                        c=str(c).zfill(idx_len)
+                    )
                     image_path = os.path.join(image_dir, image_name)
                     self.write_image(image, image_path)
+            self.logger.info(f'写入完成度{(1 - r / rows) * 100:.2f}%')
+        self.logger.info(f'写入完成！')
 
     def _prepare_image_dir(self, file, image_dir=None, result_folder=None):
         """

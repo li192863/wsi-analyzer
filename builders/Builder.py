@@ -1,3 +1,4 @@
+import logging
 import pickle
 from abc import ABC
 
@@ -8,6 +9,7 @@ class Builder(ABC):
     def __init__(self, config_file):
         self.config_file = config_file
         self.config = read_config(self.config_file)
+        self.logger = logging.getLogger(name='file-logger')
 
     def build_from_dict(self, object_cls, params_dict):
         """
@@ -28,5 +30,5 @@ class Builder(ABC):
             return pickle.load(f)
 
 if __name__ == '__main__':
-    b = Builder('../resources/settings.yml')
+    b = Builder('../conf/settings.yml')
     print(b.config)

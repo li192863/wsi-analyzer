@@ -123,6 +123,6 @@ def update_config(config_file, node_path, node_value, encoding='utf-8'):
 
 
 if __name__ == '__main__':
-    config = read_config('../resources/settings.yml')
+    config = read_config('../conf/settings.yml')
     write_config(config.to_dict(), 'test.yml')
     print(config)

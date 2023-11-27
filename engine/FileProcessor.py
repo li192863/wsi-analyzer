@@ -1,3 +1,4 @@
+import logging
 import os
 
 from builders import SlicerBuilder, InferencerBuilder, ResultBuilder
@@ -12,6 +13,8 @@ class FileProcessor(object):
     def __init__(self, file: str, processor):
         self.file: str = file
         self.processor = processor
+        self.logger = logging.getLogger(name='file-logger')
+        self.status_logger = logging.getLogger(name='status-logger')
         # 获取构建器
         self.slicer_builder: SlicerBuilder = self.processor.slicer_builder
         self.inferencer_builder: InferencerBuilder = self.processor.inferencer_builder
@@ -54,6 +57,8 @@ class FileProcessor(object):
         self._prepare_resumer()
         # 生成分割切片
         if not self.resumer.seg_slice_done:
+            self.logger.info('正在生成分割切片...')
+            self.status_logger.debug('正在生成分割切片(1/5)...')
             make_directory(self.seg_slices_dir, delete_old=True)
             self.seg_slicer.file_to_slices(self.file, image_dir=self.seg_slices_dir)
         else:
@@ -61,6 +66,7 @@ class FileProcessor(object):
         self.resumer.set_state(seg_slice_done=True)
         # 生成分类切片
         if not self.resumer.cla_slice_done:
+            self.logger.info('正在生成分类切片...')
             make_directory(self.cla_slices_dir, delete_old=True)
             self.cla_slicer.file_to_slices(self.file, image_dir=self.cla_slices_dir)
         else:
@@ -68,6 +74,7 @@ class FileProcessor(object):
         self.resumer.set_state(cla_slice_done=True)
         # 分割切片推理
         if not self.resumer.seg_inference_done:
+            self.logger.info('正在进行分割推理...')
             self.seg_dict_results = self.seg_inferencer.inference_folder(self.seg_slices_dir)
             write_object(self.seg_dict_results, self.seg_dict_results_file)
         else:
@@ -75,24 +82,28 @@ class FileProcessor(object):
         self.resumer.set_state(seg_inference_done=True)
         # 分类切片推理
         if not self.resumer.cla_inference_done:
+            self.logger.info('正在进行分类推理...')
             self.cla_dict_results = self.cla_inferencer.inference_folder(self.cla_slices_dir)
             write_object(self.cla_dict_results, self.cla_dict_results_file)
         else:
             self.cla_dict_results = read_object(self.cla_dict_results_file)
         self.resumer.set_state(cla_inference_done=True)
         # 生成分割结果
+        self.logger.info('正在生成分割结果...')
         self.seg_result = self.result_builder.build_seg_result(self.seg_dict_results)
         write_object(self.seg_result, self.seg_result_file)
         self.seg_result_table = self.seg_result.get_summary_table()  # 已被动态代理
         self.seg_result.get_summary_image(self.origin_size, save_path=self.seg_result_image_file)
 
         # 生成分类结果
+        self.logger.info('正在生成分类结果...')
         self.cla_result = self.result_builder.build_cla_result(self.cla_dict_results)
         write_object(self.cla_result, self.cla_result_file)
         self.cla_result_table = self.cla_result.get_summary_table()  # 已被动态代理
         self.cla_result.get_summary_image(self.origin_size, save_path=self.cla_result_image_file)
 
         # 生成混合结果
+        self.logger.info('正在生成混合结果...')
         self.mix_result = self.result_builder.build_mix_result(self.seg_result, self.cla_result, self.origin_size)
         write_object(self.mix_result, self.mix_result_file)
         self.mix_result_table = self.mix_result.get_summary_table()  # 已被动态代理
@@ -118,6 +129,7 @@ class FileProcessor(object):
         :param file: 切片文件
         :return: 生成文件夹
         """
+        self.logger.info('准备结果文件夹...')
         # 相关文件夹
         self.result_root = make_directory(self.result_root)
         self.seg_slices_dir = make_directory(os.path.join(self.result_root, 'seg_slices'))
@@ -141,9 +153,12 @@ class FileProcessor(object):
         准备恢复器
         :return: 恢复器resumer
         """
+        self.logger.info('准备断点恢复器...')
         if not os.path.exists(self.resumer_file):
+            self.logger.info(f'未发现断点恢复器，已创建恢复器至{self.resumer_file}！')
             self.resumer = Resumer(self.resumer_file, self.config)
             return
+        self.logger.info('发现断点恢复器，正在读取...')
         resumer: Resumer = read_object(self.resumer_file)
         self.resumer = resumer.resume_self(self.resumer_file, self.config)
 
@@ -152,6 +167,7 @@ class FileProcessor(object):
         生成报告
         :return:
         """
+        self.logger.info('生成结果报告中...')
         text = read_text('./resources/report.md')
         res = text.format(
             filepath = self.filepath,
@@ -167,3 +183,4 @@ class FileProcessor(object):
             mix_result_table = self.mix_result_table,
         )
         write_text(res, self.report_file)
+        self.logger.info(f'结果报告已生成至{self.report_file}！')

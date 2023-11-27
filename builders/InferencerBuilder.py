@@ -56,6 +56,7 @@ class InferencerBuilder(Builder):
             'batch_size': self.config.inferencer.segmentation.batch_size,
             'device': self.config.inferencer.segmentation.device,
         }
+        self.logger.debug(f'seg_inferencer参数-{params_dict}')
         return self.build_from_dict(self.create_inferencer, params_dict)
 
     def build_cla_inferencer(self) -> ClassificationInferencer:
@@ -69,11 +70,12 @@ class InferencerBuilder(Builder):
             'batch_size': self.config.inferencer.classification.batch_size,
             'device': self.config.inferencer.classification.device,
         }
+        self.logger.debug(f'cla_inferencer参数-{params_dict}')
         return self.build_from_dict(self.create_inferencer, params_dict)
 
 
 if __name__ == '__main__':
-    inferencer_builder = InferencerBuilder('../resources/settings.yml')
+    inferencer_builder = InferencerBuilder('../conf/settings.yml')
     seg_inferencer = inferencer_builder.build_seg_inferencer()
     cla_inferencer = inferencer_builder.build_cla_inferencer()
     print(seg_inferencer)

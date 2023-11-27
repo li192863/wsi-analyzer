@@ -1,11 +1,9 @@
-import sys
-
 from PySide6 import QtWidgets
 from PySide6.QtCore import QUrl, Slot
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QApplication, QFileDialog
+from PySide6.QtWidgets import QFileDialog
 
-from ui.UI_Analyzer import Ui_Analyzer
+from ui.ui_analyzer import Ui_Analyzer
 from ui.threads import ProcessThread
 from utils import read_config
 
@@ -15,7 +13,7 @@ class Analyzer(QtWidgets.QMainWindow):
         super(Analyzer, self).__init__()
         self.ui = Ui_Analyzer()
         self.ui.setupUi(self)
-
+        # 初始化
         self.read_config()
         self.init_ui()
         self.bind_events()
@@ -26,7 +24,7 @@ class Analyzer(QtWidgets.QMainWindow):
         :return:
         """
         # 读取默认配置
-        self.default_config_file = './resources/settings.yml'
+        self.default_config_file = './conf/settings.yml'
         self.config = read_config(self.default_config_file)
 
     def init_ui(self):
@@ -48,9 +46,12 @@ class Analyzer(QtWidgets.QMainWindow):
         self.ui.checkbox_drop_last.setChecked(self.config.slicer.drop_last)
         # 输出地址
         self.ui.lineEdit_result_folder.setText(self.config.basic.result_folder)
-        # self.ui.button_choose_file.setEnabled(self.config.)
 
     def bind_events(self):
+        """
+        绑定事件
+        :return:
+        """
         self.ui.button_choose_result_folder.clicked.connect(self.on_button_choose_result_folder_clicked)
         self.ui.button_choose_file.clicked.connect(self.on_button_choose_file_clicked)
         self.ui.button_open_config.clicked.connect(self.on_button_open_config_clicked)
@@ -79,11 +80,13 @@ class Analyzer(QtWidgets.QMainWindow):
 
     def on_button_choose_result_folder_clicked(self):
         """ 选择文件夹被点击时触发 """
-        self.config.basic.result_folder = QFileDialog.getExistingDirectory(caption='选择输出文件夹地址')
+        self.ui.statusbar.showMessage('请选择输出文件夹地址')
+        self.config.basic.result_folder = QFileDialog.getExistingDirectory(caption='请选择输出文件夹地址')
         self.ui.lineEdit_result_folder.setText(self.config.basic.result_folder)
 
     def on_button_choose_file_clicked(self):
         """ 选择文件被点击时触发 """
+        self.ui.statusbar.showMessage('请选择一个或多个病理切片文件')
         self.config.basic.filelist, _ = QFileDialog.getOpenFileNames(
             caption='请选择一个或多个病理切片文件',
             filter='病理切片(*.svs *.jpg *.jpeg *.png *.tiff *.tif)'
@@ -103,19 +106,13 @@ class Analyzer(QtWidgets.QMainWindow):
         self.process_thread.start()
         self.ui.statusbar.showMessage('正在开始转换...')
 
-
     @Slot(str)
     def on_process_complete_signal(self, value):
+        """ 处理完成时触发事件 """
         self.ui.statusbar.showMessage(value)
         self.config.basic.filelist = []
 
     @Slot(str)
     def on_process_failed_signal(self, value):
+        """ 处理识别时触发事件"""
         self.ui.statusbar.showMessage(value)
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    analyzer = Analyzer()
-    analyzer.show()
-    sys.exit(app.exec())

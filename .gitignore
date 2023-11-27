@@ -138,3 +138,4 @@ dmypy.json
 /model/segmentation/
 /tmp/
 /vips-dev-8.14/
+/logs/

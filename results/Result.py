@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from abc import ABC, abstractmethod
@@ -19,6 +20,7 @@ class Result(ABC):
         self.dict_results = dict_results
         self.slice_size = slice_size
         self.naming_regex = naming_regex
+        self.logger = logging.getLogger('file-logger')
         # 获取信息
         self.down_sample = down_sample
         self.slice_width, self.slice_height = self.slice_size
@@ -52,7 +54,8 @@ class Result(ABC):
         if match:
             d, r, c = int(match.group(1)), int(match.group(2)), int(match.group(3))
         else:
-            raise ValueError('解析结果文件字符串出错，请检查文件字符串是否正确或重新生成切片')
+            self.logger.error('解析结果文件字符串出错，请检查文件字符串是否正确或重新生成切片!')
+            raise ValueError('解析结果文件字符串出错，请检查文件字符串是否正确或重新生成切片!')
         return d, r, c
 
     def get_slice_image(self, r, c):

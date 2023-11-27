@@ -23,6 +23,7 @@ class ClassificationResult(Result):
         :return: 无
         """
         slice_paths, results, counts = dict(), dict(), dict()
+        self.logger.info('开始扫描分类结果...')
         for file, result in self.dict_results.items():
             # 解析路径
             d, r, c = self.parse_path(file)
@@ -33,6 +34,7 @@ class ClassificationResult(Result):
             results[key] = value
             # counts
             counts[value] = counts.get(value, 0) + 1
+        self.logger.info('分类结果扫描完成！')
         self.slice_paths = slice_paths
         self.results = results
         self.counts = counts

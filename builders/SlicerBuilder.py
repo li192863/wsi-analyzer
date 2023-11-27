@@ -45,6 +45,7 @@ class SlicerBuilder(Builder):
             'suffix': self.config.slicer.segmentation.suffix,
             'memory': self.config.slicer.segmentation.memory
         }
+        self.logger.debug(f'seg_slicer参数-{params_dict}')
         return self.build_from_dict(self.create_slicer, params_dict)
 
     def build_cla_slicer(self) -> Slicer:
@@ -58,11 +59,12 @@ class SlicerBuilder(Builder):
             'suffix': self.config.slicer.classification.suffix,
             'memory': self.config.slicer.classification.memory
         }
+        self.logger.debug(f'cla_slicer参数-{params_dict}')
         return self.build_from_dict(self.create_slicer, params_dict)
 
 
 if __name__ == '__main__':
-    slicer_builder = SlicerBuilder('../resources/settings.yml')
+    slicer_builder = SlicerBuilder('../conf/settings.yml')
     seg_slicer = slicer_builder.build_seg_slicer()
     cla_slicer = slicer_builder.build_cla_slicer()
     print(seg_slicer)

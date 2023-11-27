@@ -59,12 +59,17 @@ class ResultBuilder(Builder):
             'prefix': self.config.slicer.segmentation.prefix,
             'suffix': self.config.slicer.segmentation.suffix,
         }
+        seg_result_log_info = {
+            key: value if key != "dict_results" else "***HIDDEN***" for key, value in params_dict.items()
+        }
+        self.logger.debug(f'seg_result参数 - {seg_result_log_info}')
         seg_result: SegmentationResult = self.build_from_dict(self.create_result, params_dict)
         # get_summary_table
         seg_result.get_summary_table = partial(
             seg_result.get_summary_table,
             classes=self.config.inferencer.segmentation.classes
         )
+        self.logger.debug('已代理seg_result的get_summary_table方法！')
         # get_summary_image
         plot_kwargs = self.config.result.segmentation.summary_image.plot_kwargs
         plot_kwargs.vmin, plot_kwargs.vmax = 0, len(self.config.inferencer.segmentation.classes) - 1
@@ -75,6 +80,7 @@ class ResultBuilder(Builder):
             plot_kwargs=plot_kwargs,
             save_kwargs=save_kwargs,
         )
+        self.logger.debug('已代理seg_result的get_summary_image方法！')
         return seg_result
 
     def build_cla_result(self, dict_results) -> ClassificationResult:
@@ -88,12 +94,17 @@ class ResultBuilder(Builder):
             'prefix': self.config.slicer.classification.prefix,
             'suffix': self.config.slicer.classification.suffix,
         }
+        cla_result_log_info = {
+            key: value if key != "dict_results" else "***HIDDEN***" for key, value in params_dict.items()
+        }
+        self.logger.debug(f'cla_result参数 - {cla_result_log_info}')
         cla_result:ClassificationResult = self.build_from_dict(self.create_result, params_dict)
         # get_summary_table
         cla_result.get_summary_table = partial(
             cla_result.get_summary_table,
             classes=self.config.inferencer.classification.classes
         )
+        self.logger.debug('已代理cla_result的get_summary_table方法！')
         # get_summary_image
         # plot_kwargs={'cmap':'viridis', 'vmin':0, 'vmax':6}, save_kwargs={'dpi':256})
         # get_summary_image
@@ -106,6 +117,7 @@ class ResultBuilder(Builder):
             plot_kwargs=plot_kwargs,
             save_kwargs=save_kwargs,
         )
+        self.logger.debug('已代理cla_result的get_summary_image方法！')
         return cla_result
 
     def build_mix_result(self, seg_result, cla_result, origin_size):
@@ -117,6 +129,7 @@ class ResultBuilder(Builder):
             'origin_size': origin_size,
             'drop_last': self.config.slicer.drop_last
         }
+        self.logger.debug(f'mix_result参数-{params_dict}')
         mix_result: ResultMerger = self.build_from_dict(self.create_result, params_dict)
         # get_summary_table
         mix_result.get_summary_table = partial(
@@ -124,12 +137,13 @@ class ResultBuilder(Builder):
             seg_classes=self.config.inferencer.segmentation.classes,
             cla_classes=self.config.inferencer.classification.classes,
         )
+        self.logger.debug('已代理mix_result的get_summary_table方法！')
         return mix_result
 
 
 if __name__ == '__main__':
     from utils import *
-    result_builder = ResultBuilder('../resources/settings.yml')
+    result_builder = ResultBuilder('../conf/settings.yml')
     seg_result = result_builder.build_seg_result(result_builder.build_from_file('../tmp/seg_dict_result.pkl'))
     cla_result = result_builder.build_cla_result(result_builder.build_from_file('../tmp/cla_dict_result.pkl'))
     mix_result = result_builder.build_mix_result(seg_result, cla_result, get_image_size(r"E:\Projects\Carcinoma\#Temp\new_test\TCGA-2Y-A9H5-01Z-00-DX1.08348C3C-A16F-45F6-8AE9-D0613268D703.svs"))

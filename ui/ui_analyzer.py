@@ -17,22 +17,23 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QLabel,
-    QLayout, QLineEdit, QMainWindow, QPushButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QStatusBar,
-    QVBoxLayout, QWidget)
+    QLayout, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QProgressBar, QPushButton, QSizePolicy,
+    QSpacerItem, QSpinBox, QStatusBar, QVBoxLayout,
+    QWidget)
 
 class Ui_Analyzer(object):
     def setupUi(self, Analyzer):
         if not Analyzer.objectName():
             Analyzer.setObjectName(u"Analyzer")
         Analyzer.setWindowModality(Qt.NonModal)
-        Analyzer.resize(454, 303)
+        Analyzer.resize(516, 309)
         Analyzer.setMinimumSize(QSize(0, 299))
         font = QFont()
         font.setFamilies([u"\u5fae\u8f6f\u96c5\u9ed1"])
         Analyzer.setFont(font)
         icon = QIcon()
-        icon.addFile(u"./resources/favicon.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"resources/favicon.ico", QSize(), QIcon.Normal, QIcon.Off)
         Analyzer.setWindowIcon(icon)
         Analyzer.setWindowOpacity(1.000000000000000)
         self.action_choose_file = QAction(Analyzer)
@@ -46,6 +47,16 @@ class Ui_Analyzer(object):
         self.action_help.setObjectName(u"action_help")
         self.action_about = QAction(Analyzer)
         self.action_about.setObjectName(u"action_about")
+        self.actionguanyu = QAction(Analyzer)
+        self.actionguanyu.setObjectName(u"actionguanyu")
+        self.action_exit = QAction(Analyzer)
+        self.action_exit.setObjectName(u"action_exit")
+        self.action_version = QAction(Analyzer)
+        self.action_version.setObjectName(u"action_version")
+        self.action_author = QAction(Analyzer)
+        self.action_author.setObjectName(u"action_author")
+        self.action_open_default_config = QAction(Analyzer)
+        self.action_open_default_config.setObjectName(u"action_open_default_config")
         self.centralwidget = QWidget(Analyzer)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -287,6 +298,29 @@ class Ui_Analyzer(object):
 
         self.verticalLayout.addLayout(self.layout_result_folder)
 
+        self.layout_progress = QHBoxLayout()
+        self.layout_progress.setObjectName(u"layout_progress")
+        self.layout_progress.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.layout_progress.setContentsMargins(-1, 0, -1, 0)
+        self.label_11 = QLabel(self.centralwidget)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setFont(font1)
+        self.label_11.setAlignment(Qt.AlignCenter)
+        self.label_11.setIndent(0)
+
+        self.layout_progress.addWidget(self.label_11)
+
+        self.progressBar = QProgressBar(self.centralwidget)
+        self.progressBar.setObjectName(u"progressBar")
+        self.progressBar.setValue(0)
+
+        self.layout_progress.addWidget(self.progressBar)
+
+        self.layout_progress.setStretch(0, 3)
+        self.layout_progress.setStretch(1, 9)
+
+        self.verticalLayout.addLayout(self.layout_progress)
+
         self.layout_operation = QHBoxLayout()
         self.layout_operation.setObjectName(u"layout_operation")
         self.layout_operation.setSizeConstraint(QLayout.SetDefaultConstraint)
@@ -347,8 +381,27 @@ class Ui_Analyzer(object):
         font4 = QFont()
         font4.setFamilies([u"\u4eff\u5b8b"])
         font4.setPointSize(10)
+        font4.setBold(True)
         self.statusbar.setFont(font4)
         Analyzer.setStatusBar(self.statusbar)
+        self.menuBar = QMenuBar(Analyzer)
+        self.menuBar.setObjectName(u"menuBar")
+        self.menuBar.setGeometry(QRect(0, 0, 516, 22))
+        self.menu_file = QMenu(self.menuBar)
+        self.menu_file.setObjectName(u"menu_file")
+        self.menu_about = QMenu(self.menuBar)
+        self.menu_about.setObjectName(u"menu_about")
+        self.menu = QMenu(self.menuBar)
+        self.menu.setObjectName(u"menu")
+        Analyzer.setMenuBar(self.menuBar)
+
+        self.menuBar.addAction(self.menu_file.menuAction())
+        self.menuBar.addAction(self.menu.menuAction())
+        self.menuBar.addAction(self.menu_about.menuAction())
+        self.menu_file.addAction(self.action_exit)
+        self.menu_about.addAction(self.action_version)
+        self.menu_about.addAction(self.action_author)
+        self.menu.addAction(self.action_open_default_config)
 
         self.retranslateUi(Analyzer)
 
@@ -361,6 +414,11 @@ class Ui_Analyzer(object):
         self.action_convert.setText(QCoreApplication.translate("Analyzer", u"\u5f00\u59cb\u8f6c\u6362", None))
         self.action_help.setText(QCoreApplication.translate("Analyzer", u"\u4f7f\u7528\u5e2e\u52a9", None))
         self.action_about.setText(QCoreApplication.translate("Analyzer", u"\u5173\u4e8e\u4f5c\u8005", None))
+        self.actionguanyu.setText(QCoreApplication.translate("Analyzer", u"guanyu", None))
+        self.action_exit.setText(QCoreApplication.translate("Analyzer", u"\u9000\u51fa", None))
+        self.action_version.setText(QCoreApplication.translate("Analyzer", u"\u7248\u672c", None))
+        self.action_author.setText(QCoreApplication.translate("Analyzer", u"\u4f5c\u8005", None))
+        self.action_open_default_config.setText(QCoreApplication.translate("Analyzer", u"\u9ed8\u8ba4\u914d\u7f6e", None))
         self.label.setText(QCoreApplication.translate("Analyzer", u"\u5206\u5272\u5207\u7247", None))
         self.label_5.setText(QCoreApplication.translate("Analyzer", u"\u964d\u91c7\u6837", None))
 #if QT_CONFIG(tooltip)
@@ -395,8 +453,13 @@ class Ui_Analyzer(object):
         self.lineEdit_result_folder.setText("")
         self.lineEdit_result_folder.setPlaceholderText(QCoreApplication.translate("Analyzer", u"\u81ea\u52a8\u6307\u5b9a", None))
         self.button_choose_result_folder.setText(QCoreApplication.translate("Analyzer", u"\u9009\u62e9\u6587\u4ef6\u5939", None))
+        self.label_11.setText(QCoreApplication.translate("Analyzer", u"\u8fd0\u884c\u8fdb\u5ea6", None))
+        self.progressBar.setFormat(QCoreApplication.translate("Analyzer", u"%p%", None))
         self.button_choose_file.setText(QCoreApplication.translate("Analyzer", u"\u9009\u62e9\u6587\u4ef6", None))
         self.button_open_config.setText(QCoreApplication.translate("Analyzer", u"\u6253\u5f00\u914d\u7f6e", None))
         self.button_process.setText(QCoreApplication.translate("Analyzer", u"\u5f00\u59cb\u5904\u7406", None))
+        self.menu_file.setTitle(QCoreApplication.translate("Analyzer", u"\u6587\u4ef6", None))
+        self.menu_about.setTitle(QCoreApplication.translate("Analyzer", u"\u5173\u4e8e", None))
+        self.menu.setTitle(QCoreApplication.translate("Analyzer", u"\u7f16\u8f91", None))
     # retranslateUi
 

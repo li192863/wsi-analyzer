@@ -20,7 +20,7 @@ class ProcessThread(QThread):
         写入当前配置
         :return:
         """
-        self.running_confile_file = './resources/running_set.yml'
+        self.running_confile_file = './conf/running_set.yml'
         write_config(self.config, self.running_confile_file)
 
     def run(self):
@@ -29,6 +29,6 @@ class ProcessThread(QThread):
             processor.process()
             self.process_complete_signal.emit('已转换完成！')
         except Exception as e:
-            with open('error.txt', 'w') as f:
+            with open('./logs/error.txt', 'w') as f:
                 traceback.print_exc(file=f)
             self.process_failed_signal.emit(str(e))
