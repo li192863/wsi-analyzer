@@ -1,10 +1,10 @@
-from ui.analyzer import Analyzer
+from ui.analyzer_window import AnalyzerWindow
 from ui.threads import ProcessThread
 from ui.ui_analyzer import Ui_Analyzer
 
 
 __all__ = [
-    'Analyzer',
+    'AnalyzerWindow',
     'ProcessThread',
     'Ui_Analyzer'
 ]

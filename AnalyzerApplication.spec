@@ -2,17 +2,19 @@
 
 
 a = Analysis(
-    ['AnalyzerApplication.py'],
+    ['main.py'],
     pathex=[
         'E:/Projects/Carcinoma/analyzer'
     ],
     binaries=[],
     datas=[
-#        ('./resources', '../resources'),
-#        ('./vips-dev-8.14', '../vips-dev-8.14'),
-#        ('./weights', '../weights')
+        ('./conf', './conf'),
+        ('./logs', './logs'),
+        ('./resources', './resources'),
+        ('./vips-dev-8.14', './vips-dev-8.14'),
+        ('./weights', './weights')
     ],
-    hiddenimports=['PySide6.QtXml'],
+    hiddenimports=['PySide2.QtXml'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

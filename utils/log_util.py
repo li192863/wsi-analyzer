@@ -13,7 +13,7 @@ def init_file_logger(file='./logs/log.txt', name='file-logger', level=logging.DE
     logger = logging.getLogger(name=name)
     logger.setLevel(level)
     # 文件处理器
-    file_handler = logging.FileHandler(file)
+    file_handler = logging.FileHandler(file, encoding='utf-8')
     file_handler.setLevel(level)
     file_handler_formatter = logging.Formatter('[%(asctime)s] - [%(levelname)7s] - [%(module)s]: %(message)s')
     file_handler.setFormatter(file_handler_formatter)

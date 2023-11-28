@@ -689,79 +689,49 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <addaction name="action_stop"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menu_about">
     <property name="title">
      <string>关于</string>
     </property>
-    <addaction name="action_version"/>
-    <addaction name="action_author"/>
+    <addaction name="action_about"/>
    </widget>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menu_edit">
     <property name="title">
      <string>编辑</string>
     </property>
+    <addaction name="action_open_running_config"/>
     <addaction name="action_open_default_config"/>
    </widget>
    <addaction name="menu_file"/>
-   <addaction name="menu"/>
+   <addaction name="menu_edit"/>
    <addaction name="menu_about"/>
   </widget>
-  <action name="action_choose_file">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
+  <action name="action_exit">
    <property name="text">
-    <string>选择文件</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>微软雅黑</family>
-    </font>
-   </property>
-  </action>
-  <action name="action_convert">
-   <property name="text">
-    <string>开始转换</string>
-   </property>
-  </action>
-  <action name="action_help">
-   <property name="text">
-    <string>使用帮助</string>
+    <string>退出程序</string>
    </property>
   </action>
   <action name="action_about">
    <property name="text">
-    <string>关于作者</string>
-   </property>
-  </action>
-  <action name="actionguanyu">
-   <property name="text">
-    <string>guanyu</string>
-   </property>
-  </action>
-  <action name="action_exit">
-   <property name="text">
-    <string>退出</string>
-   </property>
-  </action>
-  <action name="action_version">
-   <property name="text">
-    <string>版本</string>
-   </property>
-  </action>
-  <action name="action_author">
-   <property name="text">
-    <string>作者</string>
+    <string>关于软件</string>
    </property>
   </action>
   <action name="action_open_default_config">
    <property name="text">
     <string>默认配置</string>
+   </property>
+  </action>
+  <action name="action_stop">
+   <property name="text">
+    <string>中止处理</string>
+   </property>
+  </action>
+  <action name="action_open_running_config">
+   <property name="text">
+    <string>运行配置</string>
    </property>
   </action>
  </widget>
