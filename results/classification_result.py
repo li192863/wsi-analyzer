@@ -35,7 +35,8 @@ class ClassificationResult(Result):
             results[key] = value
             # counts
             counts[value] = counts.get(value, 0) + 1
-            self.progress_binder.set_stage((i + 1) / len(self.dict_results), 'CLA_RESULT')
+            if i % 4 == 0:
+                self.progress_binder.set_stage((i + 1) / len(self.dict_results), 'CLA_RESULT')
         self.logger.info('分类结果扫描完成！')
         self.progress_binder.set_stage(100, 'CLA_RESULT')
         self.slice_paths = slice_paths

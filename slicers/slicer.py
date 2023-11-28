@@ -80,8 +80,9 @@ class Slicer(ABC):
                     )
                     image_path = os.path.join(image_dir, image_name)
                     self.write_image(image, image_path)
-            self.logger.info(f'写入完成度{(1 - r / rows) * 100:.2f}%')
-            self.progress_binder.set_stage((1 - r / rows) * 100, stage)
+            if r % 4 == 0:
+                self.logger.info(f'写入完成度{(1 - r / rows) * 100:.2f}%')
+                self.progress_binder.set_stage((1 - r / rows) * 100, stage)
         self.progress_binder.set_stage(100, stage)
         self.logger.info(f'写入完成！')
 

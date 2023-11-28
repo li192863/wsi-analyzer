@@ -3,7 +3,6 @@ import sys
 
 from PySide2.QtWidgets import QApplication
 
-from binders import StatusbarBinder, ProgressbarBinder
 from ui import Analyzer
 from utils import init_file_logger
 
@@ -26,7 +25,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # a = StatusbarBinder(None)
-    # b = ProgressbarBinder(None)
-    # print(id(a))
-    # print(id(b))

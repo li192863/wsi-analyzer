@@ -75,7 +75,8 @@ class ResultMerger(object):
                 results[r, c, :] = seg_class, cla_class
                 # counts
                 counts[(seg_class, cla_class)] = counts.get((seg_class, cla_class), 0) + 1
-            self.progress_binder.set_stage((r + 1) / self.cla_rows, 'MIX_RESULT')
+            if r % 4 == 0:
+                self.progress_binder.set_stage((r + 1) / self.cla_rows, 'MIX_RESULT')
         self.logger.info('分类分割结果融合完成！')
         self.progress_binder.set_stage(100, 'MIX_RESULT')
         self.results = results

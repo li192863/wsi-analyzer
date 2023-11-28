@@ -37,7 +37,8 @@ class SegmentationResult(Result):
             # counts
             for val, cnt in zip(unique_vals, cnts):
                 counts[val] = counts.get(val, 0) + cnt
-            self.progress_binder.set_stage((i + 1) / len(self.dict_results), 'SEG_RESULT')
+            if i % 4 == 0:
+                self.progress_binder.set_stage((i + 1) / len(self.dict_results), 'SEG_RESULT')
         self.logger.info('分割结果扫描完成！')
         self.progress_binder.set_stage(100, 'SEG_RESULT')
         self.slice_paths = slice_paths

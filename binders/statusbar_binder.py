@@ -47,11 +47,7 @@ class StatusbarBinder(Binder):
         """
         # 消息颜色
         self.palette.setColor(QPalette.WindowText, self.LEVEL_COLORS[level])
-        # # 设置颜色
-        # if self.statusbar.palette() != self.palette:
-        #     self.statusbar.setPalette(self.palette)
-        # # 显示消息
-        # self.statusbar.showMessage(message)
+        # 发送信号
         self.emitter.status_message_signal.emit(message, self.palette)
 
     def info(self, message):

@@ -150,8 +150,9 @@ class Inferencer(ABC):
                 inputs = inputs.to(self.device)  # [b, c, h, w]
                 outputs = self.model(inputs)  # [b, num_classes]
                 results.extend(self.post_process(inputs, outputs))
-                self.logger.info(f'推理完成度{(i + 1) * 100 / len(dataloader):.2f}%')
-                self.progress_binder.set_stage((i + 1) * 100 / len(dataloader), stage)
+                if i % 4 == 0:
+                    self.logger.info(f'推理完成度{(i + 1) * 100 / len(dataloader):.2f}%')
+                    self.progress_binder.set_stage((i + 1) * 100 / len(dataloader), stage)
         self.logger.info('推理完成！')
         self.progress_binder.set_stage(100, stage)
         return dict(sorted({file: result for file, result in zip(files, results)}.items()))

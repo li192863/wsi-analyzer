@@ -1,6 +1,3 @@
-import weakref
-from threading import Thread
-
 from PySide2.QtCore import QObject, Signal
 
 from binders.binder import Binder
@@ -63,11 +60,9 @@ class ProgressbarBinder(Binder):
         # 容错
         self.value = max(0.0, value)
         self.value = min(100.0, value)
-        # if (abs(self.value - self.progressbar.value()) >= 1):
-        #     self.progressbar.setValue(self.value)
-        # Thread(target=self.progressbar.setValue, args=(self.value,)).start()
-        # self.progressbar.setValue(self.value)
-        self.emitter.progress_update_signal.emit(self.value)
+        # 若更新值超过阈值，则发送信号
+        if (abs(self.value - self.progressbar.value()) >= 1):
+            self.emitter.progress_update_signal.emit(self.value)
 
     def get(self):
         """
