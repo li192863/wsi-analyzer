@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 
 from PIL import Image
 
+from binders import get_progress_binder
+
 
 class Result(ABC):
     """ 分割结果 """
@@ -21,6 +23,7 @@ class Result(ABC):
         self.slice_size = slice_size
         self.naming_regex = naming_regex
         self.logger = logging.getLogger('file-logger')
+        self.progress_binder = get_progress_binder()
         # 获取信息
         self.down_sample = down_sample
         self.slice_width, self.slice_height = self.slice_size

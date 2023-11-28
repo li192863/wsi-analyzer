@@ -6,6 +6,7 @@ from typing import Iterable
 import numpy as np
 from PIL import Image
 
+from binders import get_progress_binder
 from utils import make_directory, get_boxed_size
 
 
@@ -25,6 +26,7 @@ class Slicer(ABC):
         self.prefix = prefix
         self.suffix = suffix
         self.logger = logging.getLogger('file-logger')
+        self.progress_binder = get_progress_binder()
 
         self.slice_width, self.slice_height = self.slice_size
 
@@ -49,9 +51,14 @@ class Slicer(ABC):
         image_dir = self._prepare_image_dir(file, image_dir, result_folder)
         # 转换图片为数组
         self.logger.info('开始读取图片...')
+        stage, _ = self.progress_binder.get_stage()
+        self.progress_binder.set_stage(0, stage)
         image_arr = self.get_image_array(down_sampled_image)
+        self.progress_binder.set_stage(100, stage)
         # 遍历图片
         self.logger.info('开始写入...')
+        stage, _ = self.progress_binder.get_stage()
+        self.progress_binder.set_stage(0, stage)
         for r in reversed(range(rows)):
             for c in reversed(range(cols)):
                 # 获取图片边界
@@ -74,6 +81,8 @@ class Slicer(ABC):
                     image_path = os.path.join(image_dir, image_name)
                     self.write_image(image, image_path)
             self.logger.info(f'写入完成度{(1 - r / rows) * 100:.2f}%')
+            self.progress_binder.set_stage((1 - r / rows) * 100, stage)
+        self.progress_binder.set_stage(100, stage)
         self.logger.info(f'写入完成！')
 
     def _prepare_image_dir(self, file, image_dir=None, result_folder=None):

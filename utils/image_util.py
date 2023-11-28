@@ -2,7 +2,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 plt.style.use('_mpl-gallery-nogrid')
-matplotlib.use('Qt5Agg')
+matplotlib.use('QtAgg')
 
 
 def write_image(tensor, save_path=None, show_image=False, plot_kwargs=dict(), save_kwargs=dict()):

@@ -1,7 +1,9 @@
 basic:
   auto_resume: true
   filelist:
+  - E:/Projects/Carcinoma/#Temp/素材/TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D76.svs
   - E:/Projects/Carcinoma/#Temp/素材/TCGA-2Y-A9GW-01Z-00-DX1.71805205-933D-4D72-A4A2-586DC5490D78.svs
+  - E:/Projects/Carcinoma/#Temp/素材/TCGA-CC-A5UC-01Z-00-DX1.5844CBD9-61B4-47D3-A5D9-C283926BF710.svs
   force_inference: false
   result_folder: ''
   slicer:

@@ -8,6 +8,8 @@ from PIL import Image
 from torch import Tensor
 from torch.utils.data import DataLoader
 
+from binders import ProgressbarBinder
+
 
 class FileListDataset(torch.utils.data.Dataset):
     """ 文件列表数据集 """
@@ -86,6 +88,7 @@ class Inferencer(ABC):
         self.batch_size = batch_size
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.logger = logging.getLogger(name='file-logger')
+        self.progress_binder = ProgressbarBinder()
         # 构建映射
         self.class_to_idx = {clazz: idx for idx, clazz in enumerate(self.classes)}
         self.idx_to_class = {idx: clazz for idx, clazz in enumerate(self.classes)}
@@ -141,12 +144,16 @@ class Inferencer(ABC):
         self.model.eval()  # Sets the module in evaluation mode
         with torch.no_grad():  # Disabling gradient calculation
             # with tqdm(dataloader, desc='inference', total=len(dataloader)) as pbar:  # 进度条
+            stage, _ = self.progress_binder.get_stage()
+            self.progress_binder.set_stage(0, stage)
             for i, inputs in enumerate(dataloader):
                 inputs = inputs.to(self.device)  # [b, c, h, w]
                 outputs = self.model(inputs)  # [b, num_classes]
                 results.extend(self.post_process(inputs, outputs))
                 self.logger.info(f'推理完成度{(i + 1) * 100 / len(dataloader):.2f}%')
+                self.progress_binder.set_stage((i + 1) * 100 / len(dataloader), stage)
         self.logger.info('推理完成！')
+        self.progress_binder.set_stage(100, stage)
         return dict(sorted({file: result for file, result in zip(files, results)}.items()))
 
     def inference_folder(self, folder: str) -> dict:

@@ -1,7 +1,9 @@
+import faulthandler
 import sys
 
-from PySide6.QtWidgets import QApplication
+from PySide2.QtWidgets import QApplication
 
+from binders import StatusbarBinder, ProgressbarBinder
 from ui import Analyzer
 from utils import init_file_logger
 
@@ -11,6 +13,7 @@ def main():
     主函数
     :return:
     """
+    faulthandler.enable()
     # logger
     init_file_logger()
     # Application
@@ -18,8 +21,12 @@ def main():
     analyzer = Analyzer()
     # Run
     analyzer.show()
-    sys.exit(app.exec())
+    app.exec_()
 
 
 if __name__ == '__main__':
     main()
+    # a = StatusbarBinder(None)
+    # b = ProgressbarBinder(None)
+    # print(id(a))
+    # print(id(b))

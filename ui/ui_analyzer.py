@@ -3,34 +3,25 @@
 ################################################################################
 ## Form generated from reading UI file 'analyzer.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.0
+## Created by: Qt User Interface Compiler version 5.15.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
-    QCursor, QFont, QFontDatabase, QGradient,
-    QIcon, QImage, QKeySequence, QLinearGradient,
-    QPainter, QPalette, QPixmap, QRadialGradient,
-    QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QLabel,
-    QLayout, QLineEdit, QMainWindow, QMenu,
-    QMenuBar, QProgressBar, QPushButton, QSizePolicy,
-    QSpacerItem, QSpinBox, QStatusBar, QVBoxLayout,
-    QWidget)
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+
 
 class Ui_Analyzer(object):
     def setupUi(self, Analyzer):
         if not Analyzer.objectName():
             Analyzer.setObjectName(u"Analyzer")
         Analyzer.setWindowModality(Qt.NonModal)
-        Analyzer.resize(516, 309)
+        Analyzer.resize(700, 500)
         Analyzer.setMinimumSize(QSize(0, 299))
         font = QFont()
-        font.setFamilies([u"\u5fae\u8f6f\u96c5\u9ed1"])
+        font.setFamily(u"\u5fae\u8f6f\u96c5\u9ed1")
         Analyzer.setFont(font)
         icon = QIcon()
         icon.addFile(u"resources/favicon.ico", QSize(), QIcon.Normal, QIcon.Off)
@@ -75,9 +66,10 @@ class Ui_Analyzer(object):
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
         font1 = QFont()
-        font1.setFamilies([u"\u5e7c\u5706"])
+        font1.setFamily(u"\u5e7c\u5706")
         font1.setPointSize(12)
         font1.setBold(True)
+        font1.setWeight(75)
         self.label.setFont(font1)
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setIndent(0)
@@ -87,7 +79,7 @@ class Ui_Analyzer(object):
         self.label_5 = QLabel(self.centralwidget)
         self.label_5.setObjectName(u"label_5")
         font2 = QFont()
-        font2.setFamilies([u"\u5fae\u8f6f\u96c5\u9ed1"])
+        font2.setFamily(u"\u5fae\u8f6f\u96c5\u9ed1")
         font2.setPointSize(8)
         self.label_5.setFont(font2)
         self.label_5.setLayoutDirection(Qt.LeftToRight)
@@ -286,7 +278,7 @@ class Ui_Analyzer(object):
         sizePolicy1.setHeightForWidth(self.button_choose_result_folder.sizePolicy().hasHeightForWidth())
         self.button_choose_result_folder.setSizePolicy(sizePolicy1)
         font3 = QFont()
-        font3.setFamilies([u"\u5fae\u8f6f\u96c5\u9ed1"])
+        font3.setFamily(u"\u5fae\u8f6f\u96c5\u9ed1")
         font3.setPointSize(10)
         self.button_choose_result_folder.setFont(font3)
 
@@ -379,14 +371,15 @@ class Ui_Analyzer(object):
         self.statusbar = QStatusBar(Analyzer)
         self.statusbar.setObjectName(u"statusbar")
         font4 = QFont()
-        font4.setFamilies([u"\u4eff\u5b8b"])
+        font4.setFamily(u"\u4eff\u5b8b")
         font4.setPointSize(10)
         font4.setBold(True)
+        font4.setWeight(75)
         self.statusbar.setFont(font4)
         Analyzer.setStatusBar(self.statusbar)
         self.menuBar = QMenuBar(Analyzer)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 516, 22))
+        self.menuBar.setGeometry(QRect(0, 0, 489, 22))
         self.menu_file = QMenu(self.menuBar)
         self.menu_file.setObjectName(u"menu_file")
         self.menu_about = QMenu(self.menuBar)

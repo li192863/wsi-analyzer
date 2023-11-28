@@ -24,7 +24,8 @@ class ClassificationResult(Result):
         """
         slice_paths, results, counts = dict(), dict(), dict()
         self.logger.info('开始扫描分类结果...')
-        for file, result in self.dict_results.items():
+        self.progress_binder.set_stage(0, 'CLA_RESULT')
+        for i, (file, result) in enumerate(self.dict_results.items()):
             # 解析路径
             d, r, c = self.parse_path(file)
             key, value = (r, c), result['class']
@@ -34,7 +35,9 @@ class ClassificationResult(Result):
             results[key] = value
             # counts
             counts[value] = counts.get(value, 0) + 1
+            self.progress_binder.set_stage((i + 1) / len(self.dict_results), 'CLA_RESULT')
         self.logger.info('分类结果扫描完成！')
+        self.progress_binder.set_stage(100, 'CLA_RESULT')
         self.slice_paths = slice_paths
         self.results = results
         self.counts = counts

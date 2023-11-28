@@ -1,5 +1,6 @@
 import logging
 
+from binders import get_status_binder, get_progress_binder
 from builders import SlicerBuilder, InferencerBuilder, ResultBuilder
 from engine.file_processor import FileProcessor
 from utils import read_config
@@ -15,7 +16,8 @@ class Processor(object):
         self.config_file = config_file
         self.config = read_config(self.config_file)
         self.logger = logging.getLogger(name='file-logger')
-        self.status_logger = logging.getLogger(name='status-logger')
+        self.status_binder = get_status_binder()  # 已创建无需传参
+        self.progress_binder = get_progress_binder()  # 已创建无需传参
         # 读取基本配置
         self.filelist = self.config.basic.filelist
         self.auto_resume = self.config.basic.auto_resume
@@ -81,7 +83,7 @@ class Processor(object):
         """
         self.logger.info('开始处理...')
         for i, file in enumerate(self.filelist):
-            self.status_logger.info(f'正在处理第{i}个病理切片，共{len(self.filelist)}个')
+            self.status_binder.info(f'正在处理第{i + 1}个文件，共{len(self.filelist)}个')
             image_processor = FileProcessor(file, self)
             image_processor.process()
             self.logger.info(f'处理完成度{(i + 1) * 100 / len(self.filelist):.2f}%')

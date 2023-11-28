@@ -1,6 +1,7 @@
 import logging
 import os
 
+from binders import get_status_binder, get_progress_binder
 from builders import SlicerBuilder, InferencerBuilder, ResultBuilder
 from engine import Resumer
 from inferencers import ClassificationInferencer, SegmentationInferencer
@@ -14,7 +15,8 @@ class FileProcessor(object):
         self.file: str = file
         self.processor = processor
         self.logger = logging.getLogger(name='file-logger')
-        self.status_logger = logging.getLogger(name='status-logger')
+        self.status_binder = get_status_binder()  # 已创建无需传参
+        self.progress_binder = get_progress_binder()  # 已创建无需传参
         # 获取构建器
         self.slicer_builder: SlicerBuilder = self.processor.slicer_builder
         self.inferencer_builder: InferencerBuilder = self.processor.inferencer_builder
@@ -49,67 +51,134 @@ class FileProcessor(object):
     def process(self):
         """
         对文件进行处理
-        :return:
+        :return: 无
         """
+        # 初始化进度条
+        self.progress_binder.set(0)
         # 准备结果文件夹
         self._prepare_results()
         # 准备状态恢复器
         self._prepare_resumer()
         # 生成分割切片
+        self.progress_binder.set_stage(0, 'SEG_READ')
+        self._seg_slice()
+        self.progress_binder.set_stage(100, 'SEG_SLICE')
+        # 生成分类切片
+        self.progress_binder.set_stage(0, 'CLA_READ')
+        self._cla_slice()
+        self.progress_binder.set_stage(100, 'CLA_SLICE')
+        # 分割切片推理
+        self.progress_binder.set_stage(0, 'SEG_INFERENCE')
+        self._seg_inference()
+        self.progress_binder.set_stage(100, 'SEG_INFERENCE')
+        # 分类切片推理
+        self.progress_binder.set_stage(0, 'CLA_INFERENCE')
+        self._cla_inference()
+        self.progress_binder.set_stage(100, 'CLA_INFERENCE')
+        # 生成分割结果
+        self.progress_binder.set_stage(0, 'SEG_RESULT')
+        self._seg_result()
+        self.progress_binder.set_stage(100, 'SEG_RESULT')
+        # 生成分类结果
+        self.progress_binder.set_stage(0, 'CLA_RESULT')
+        self._cla_result()
+        self.progress_binder.set_stage(100, 'CLA_RESULT')
+        # 生成混合结果
+        self.progress_binder.set_stage(0, 'MIX_RESULT')
+        self._mix_result()
+        self.progress_binder.set_stage(100, 'MIX_RESULT')
+        # 生成报告文件
+        self.generate_reports()
+        # 最终化进度条
+        self.progress_binder.set(100)
+
+    def _seg_slice(self):
+        """
+        生成分割切片
+        :return: 无
+        """
         if not self.resumer.seg_slice_done:
             self.logger.info('正在生成分割切片...')
-            self.status_logger.debug('正在生成分割切片(1/5)...')
             make_directory(self.seg_slices_dir, delete_old=True)
             self.seg_slicer.file_to_slices(self.file, image_dir=self.seg_slices_dir)
         else:
+            self.logger.info('正在恢复分割切片...')
             assert os.path.exists(self.seg_slices_dir)
         self.resumer.set_state(seg_slice_done=True)
-        # 生成分类切片
+
+    def _cla_slice(self):
+        """
+        生成分类切片
+        :return: 无
+        """
         if not self.resumer.cla_slice_done:
             self.logger.info('正在生成分类切片...')
             make_directory(self.cla_slices_dir, delete_old=True)
             self.cla_slicer.file_to_slices(self.file, image_dir=self.cla_slices_dir)
         else:
+            self.logger.info('正在恢复分类切片...')
             assert os.path.exists(self.cla_slices_dir)
         self.resumer.set_state(cla_slice_done=True)
-        # 分割切片推理
+
+    def _seg_inference(self):
+        """
+        分割推理
+        :return: 无
+        """
         if not self.resumer.seg_inference_done:
             self.logger.info('正在进行分割推理...')
             self.seg_dict_results = self.seg_inferencer.inference_folder(self.seg_slices_dir)
             write_object(self.seg_dict_results, self.seg_dict_results_file)
         else:
+            self.logger.info('正在恢复分割推理...')
             self.seg_dict_results = read_object(self.seg_dict_results_file)
         self.resumer.set_state(seg_inference_done=True)
-        # 分类切片推理
+
+    def _cla_inference(self):
+        """
+        分类推理
+        :return: 无
+        """
         if not self.resumer.cla_inference_done:
             self.logger.info('正在进行分类推理...')
             self.cla_dict_results = self.cla_inferencer.inference_folder(self.cla_slices_dir)
             write_object(self.cla_dict_results, self.cla_dict_results_file)
         else:
+            self.logger.info('正在恢复分类推理...')
             self.cla_dict_results = read_object(self.cla_dict_results_file)
         self.resumer.set_state(cla_inference_done=True)
-        # 生成分割结果
+
+    def _seg_result(self):
+        """
+        生成分割结果
+        :return: 无
+        """
         self.logger.info('正在生成分割结果...')
         self.seg_result = self.result_builder.build_seg_result(self.seg_dict_results)
-        write_object(self.seg_result, self.seg_result_file)
+        # write_object(self.seg_result, self.seg_result_file)
         self.seg_result_table = self.seg_result.get_summary_table()  # 已被动态代理
         self.seg_result.get_summary_image(self.origin_size, save_path=self.seg_result_image_file)
 
-        # 生成分类结果
+    def _cla_result(self):
+        """
+        生成分类结果
+        :return: 无
+        """
         self.logger.info('正在生成分类结果...')
         self.cla_result = self.result_builder.build_cla_result(self.cla_dict_results)
-        write_object(self.cla_result, self.cla_result_file)
+        # write_object(self.cla_result, self.cla_result_file)
         self.cla_result_table = self.cla_result.get_summary_table()  # 已被动态代理
         self.cla_result.get_summary_image(self.origin_size, save_path=self.cla_result_image_file)
 
-        # 生成混合结果
+    def _mix_result(self):
+        """
+        生成混合结果
+        :return: 无
+        """
         self.logger.info('正在生成混合结果...')
         self.mix_result = self.result_builder.build_mix_result(self.seg_result, self.cla_result, self.origin_size)
-        write_object(self.mix_result, self.mix_result_file)
+        # write_object(self.mix_result, self.mix_result_file)
         self.mix_result_table = self.mix_result.get_summary_table()  # 已被动态代理
-        # 生成报告文件
-        self.generate_reports()
-
 
     def _prepare_results(self):
         """

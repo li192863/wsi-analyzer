@@ -24,7 +24,8 @@ class SegmentationResult(Result):
         """
         slice_paths, results, counts = dict(), dict(), dict()
         self.logger.info('开始扫描分割结果...')
-        for file, result in self.dict_results.items():
+        self.progress_binder.set_stage(0, 'SEG_RESULT')
+        for i, (file, result) in enumerate(self.dict_results.items()):
             # 解析路径
             d, r, c = self.parse_path(file)
             key, value = (r, c), result['tensor']
@@ -36,7 +37,9 @@ class SegmentationResult(Result):
             # counts
             for val, cnt in zip(unique_vals, cnts):
                 counts[val] = counts.get(val, 0) + cnt
+            self.progress_binder.set_stage((i + 1) / len(self.dict_results), 'SEG_RESULT')
         self.logger.info('分割结果扫描完成！')
+        self.progress_binder.set_stage(100, 'SEG_RESULT')
         self.slice_paths = slice_paths
         self.results = results
         self.counts = counts

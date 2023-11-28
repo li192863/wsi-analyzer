@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>516</width>
-    <height>309</height>
+    <width>489</width>
+    <height>302</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -65,6 +65,7 @@
          <font>
           <family>幼圆</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -203,6 +204,7 @@
          <font>
           <family>幼圆</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -341,6 +343,7 @@
          <font>
           <family>幼圆</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -434,6 +437,7 @@
          <font>
           <family>幼圆</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -499,6 +503,7 @@
          <font>
           <family>幼圆</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -666,6 +671,7 @@
     <font>
      <family>仿宋</family>
      <pointsize>10</pointsize>
+     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -675,7 +681,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>516</width>
+     <width>489</width>
      <height>22</height>
     </rect>
    </property>

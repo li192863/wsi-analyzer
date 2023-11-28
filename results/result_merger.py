@@ -1,5 +1,8 @@
+import logging
+
 import numpy as np
 
+from binders import get_progress_binder
 from results import SegmentationResult, ClassificationResult
 from utils import get_inferencer_size
 
@@ -18,6 +21,8 @@ class ResultMerger(object):
         self.cla_result = cla_result
         self.origin_size = origin_size
         self.drop_last = drop_last
+        self.logger = logging.getLogger(name='file-logger')
+        self.progress_binder = get_progress_binder()
         # 获取信息
         self.origin_width, self.origin_height = self.origin_size
         self.seg_down_sample = self.seg_result.down_sample
@@ -58,6 +63,8 @@ class ResultMerger(object):
         """
         results = np.zeros((self.cla_rows, self.cla_cols, 2), dtype=int)
         counts = dict()
+        self.logger.info('开始融合分类分割结果...')
+        self.progress_binder.set_stage(0, 'MIX_RESULT')
         for r in range(self.cla_rows):
             for c in range(self.cla_cols):
                 origin_x1, origin_y1 = self.cla_result.box_to_origin(r, c)
@@ -68,6 +75,9 @@ class ResultMerger(object):
                 results[r, c, :] = seg_class, cla_class
                 # counts
                 counts[(seg_class, cla_class)] = counts.get((seg_class, cla_class), 0) + 1
+            self.progress_binder.set_stage((r + 1) / self.cla_rows, 'MIX_RESULT')
+        self.logger.info('分类分割结果融合完成！')
+        self.progress_binder.set_stage(100, 'MIX_RESULT')
         self.results = results
         self.counts = counts
 
