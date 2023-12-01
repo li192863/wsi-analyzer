@@ -12,6 +12,8 @@ def main():
     主函数
     :return:
     """
+    # error
+    sys.stderr = open('./logs/error.txt')
     faulthandler.enable()
     # logger
     init_file_logger()
