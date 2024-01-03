@@ -88,10 +88,13 @@ class ProgressbarBinder(Binder):
         :param stage: 阶段
         :return: 无
         """
-        start, end = self.starts[self.stage_to_idx[stage]], self.ends[self.stage_to_idx[stage]]
-        # y - start = ((end - start) / 100) * (x - 0) ==>  y = (end - start) * x / 100 + start
-        self.value = (end - start) * stage_value / 100.0 + start
-        self.set(self.value)
+        try:
+            start, end = self.starts[self.stage_to_idx[stage]], self.ends[self.stage_to_idx[stage]]
+            # y - start = ((end - start) / 100) * (x - 0) ==>  y = (end - start) * x / 100 + start
+            self.value = (end - start) * stage_value / 100.0 + start
+            self.set(self.value)
+        except Exception as e:
+            self.logger.error('设置阶段状态失败！')
 
     def get_stage(self):
         """
@@ -100,17 +103,21 @@ class ProgressbarBinder(Binder):
         :param stage: 阶段
         :return: (stage, stage_value)
         """
-        # find first idx where self.starts[idx] <= v_float
-        global idx, start, end
-        for idx, (start, end) in enumerate(zip(self.starts, self.ends)):
-            if self.value >= start and self.value < end:
-                break
-        # y - start = ((end - start) / 100) * (x - 0) ==>  x = 100 * (y - start) / (end - start)
-        stage_value = 100 * (self.value - start) / (end - start)
-        # 容错
-        stage_value = max(0.0, stage_value)
-        stage_value = min(100.0, stage_value)
-        return self.stages[idx], stage_value
+        try:
+            # find first idx where self.starts[idx] <= v_float
+            global idx, start, end
+            for idx, (start, end) in enumerate(zip(self.starts, self.ends)):
+                if self.value >= start and self.value < end:
+                    break
+            # y - start = ((end - start) / 100) * (x - 0) ==>  x = 100 * (y - start) / (end - start)
+            stage_value = 100 * (self.value - start) / (end - start)
+            # 容错
+            stage_value = max(0.0, stage_value)
+            stage_value = min(100.0, stage_value)
+            return self.stages[idx], stage_value
+        except Exception as e:
+            self.logger.error(f'获取阶段状态失败！')
+            return 'UNKNOWN', 0
 
     def update_stage(self, stage_delta_value, stage):
         """
@@ -119,8 +126,11 @@ class ProgressbarBinder(Binder):
         :param stage: 阶段
         :return: 无
         """
-        current_stage, current_stage_value = self.get_stage()
-        self.set_stage(current_stage_value + stage_delta_value, stage)
+        try:
+            current_stage, current_stage_value = self.get_stage()
+            self.set_stage(current_stage_value + stage_delta_value, stage)
+        except Exception as e:
+            self.logger.error('更新阶段状态失败！')
 
     def set_current_stage(self, stage_value):
         """
