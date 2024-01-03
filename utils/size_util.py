@@ -3,9 +3,20 @@ import os
 
 import matplotlib.pyplot as plt
 
+# 配置环境变量
+from PIL import Image
+
 vipshome = os.path.join(os.getcwd(), './vips-dev-8.14', 'bin')
+openslide_home = os.path.join(os.getcwd(), 'openslide-win64-20231011', 'bin')
 os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
+os.environ['PATH'] = openslide_home + ';' + os.environ['PATH']
 import pyvips  # 导入pyvips包
+if hasattr(os, 'add_dll_directory'):
+    # Windows
+    with os.add_dll_directory(openslide_home):
+        import openslide
+else:
+    import openslide
 
 plt.style.use('_mpl-gallery-nogrid')
 
@@ -18,8 +29,25 @@ def get_image_size(source, type='file'):
     :return: [origin_width, origin_height]
     """
     if type == 'file':
-        image = pyvips.Image.new_from_file(source)
-        return image.width, image.height
+        # try with openslide
+        try:
+            slide = openslide.OpenSlide(source)
+            return slide.dimensions
+        except:
+            pass
+        # try with vips
+        try:
+            image = pyvips.Image.new_from_file(source)
+            return image.width, image.height
+        except:
+            pass
+        # try with pillow
+        try:
+            image = Image.open(source)
+            return image.width, image.height
+        except:
+            pass
+        raise ValueError(f'文件尺寸获取失败！')
     elif type == 'image':
         assert hasattr(source, 'width') and hasattr(source, 'height')
         return source.width, source.height
