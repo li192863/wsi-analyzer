@@ -1,3 +1,4 @@
+import logging
 import threading
 
 
@@ -8,6 +9,7 @@ class Binder(object):
 
     def __init__(self, name='binder'):
         self.name = name
+        self.logger = logging.getLogger('file-logger')
 
     def __new__(cls, *args, **kwargs):
         """ 创建一个新对象 """
