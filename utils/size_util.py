@@ -7,16 +7,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 vipshome = os.path.join(os.getcwd(), './vips-dev-8.14', 'bin')
-openslide_home = os.path.join(os.getcwd(), 'openslide-win64-20231011', 'bin')
 os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
-os.environ['PATH'] = openslide_home + ';' + os.environ['PATH']
 import pyvips  # 导入pyvips包
-if hasattr(os, 'add_dll_directory'):
-    # Windows
-    with os.add_dll_directory(openslide_home):
-        import openslide
-else:
-    import openslide
 
 plt.style.use('_mpl-gallery-nogrid')
 
@@ -29,12 +21,6 @@ def get_image_size(source, type='file'):
     :return: [origin_width, origin_height]
     """
     if type == 'file':
-        # try with openslide
-        try:
-            slide = openslide.OpenSlide(source)
-            return slide.dimensions
-        except:
-            pass
         # try with vips
         try:
             image = pyvips.Image.new_from_file(source)
