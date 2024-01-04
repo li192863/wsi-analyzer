@@ -182,7 +182,7 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self.status_binder.info('请选择一个或多个病理切片文件')
         self.filelist, _ = QFileDialog.getOpenFileNames(
             caption='请选择一个或多个病理切片文件',
-            filter='病理切片(*.svs *.jpg *.jpeg *.png *.tiff *.tif)'
+            filter='病理切片(*.svs *.tif *.tiff *.mrxs *.jpg *.jpeg *.png *webp)'
         )
         self.status_binder.info(f'已选择{len(self.filelist)}个病理切片文件')
 

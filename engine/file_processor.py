@@ -44,7 +44,7 @@ class FileProcessor(object):
         # 结果信息
         self.seg_classes = self.config.inferencer.segmentation.classes  # 分割类别
         self.cla_classes = self.config.inferencer.classification.classes  # 分类类别
-        self.result_root = os.path.join(self.result_folder or self.filepath, '.'.join(self.filename.split('.')[:-1]))  # 结果路径
+        self.result_root = os.path.join(self.result_folder or self.filepath, '.'.join(self.filename.split('.')[:-1]) + '_result')  # 结果路径
         # 配置信息
         self.yml_config = read_text(self.processor.config_file)  # 配置文件
 
