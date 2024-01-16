@@ -141,3 +141,5 @@ dmypy.json
 /logs/
 /conf/running_set.yml
 /openslide-win64-20231011/
+/model/classification/
+/model/segmentation/
