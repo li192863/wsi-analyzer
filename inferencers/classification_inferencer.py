@@ -11,9 +11,9 @@ class ClassificationPresetEval:
     def __init__(
             self,
             *,
-            resize_size,
-            mean=(0.485, 0.456, 0.406),
-            std=(0.229, 0.224, 0.225),
+            resize_size=256,
+            mean=(0.723, 0.485, 0.608),
+            std=(0.293, 0.377, 0.333),
             interpolation=InterpolationMode.BILINEAR,
     ):
         self.transforms = transforms.Compose(
