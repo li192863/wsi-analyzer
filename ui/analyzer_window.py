@@ -4,7 +4,7 @@ import time
 from PySide2 import QtWidgets
 from PySide2.QtCore import QUrl, Slot
 from PySide2.QtGui import QDesktopServices, QPalette
-from PySide2.QtWidgets import QFileDialog, QApplication
+from PySide2.QtWidgets import QFileDialog, QApplication, QLabel
 
 from binders import StatusbarBinder, ProgressbarBinder
 from ui.about_dialog import AboutDialog

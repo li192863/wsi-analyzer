@@ -371,6 +371,9 @@
           <family>微软雅黑</family>
          </font>
         </property>
+        <property name="toolTip">
+         <string>尝试从上次运行处恢复</string>
+        </property>
         <property name="text">
          <string>自动恢复</string>
         </property>
@@ -392,6 +395,9 @@
           <family>微软雅黑</family>
          </font>
         </property>
+        <property name="toolTip">
+         <string>即使可自动恢复仍进行推理</string>
+        </property>
         <property name="text">
          <string>强制推理</string>
         </property>
@@ -409,6 +415,9 @@
          <font>
           <family>微软雅黑</family>
          </font>
+        </property>
+        <property name="toolTip">
+         <string>图片裁切后去除多余边缘</string>
         </property>
         <property name="text">
          <string>舍弃边缘</string>
@@ -454,6 +463,9 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_result_folder">
+        <property name="toolTip">
+         <string>结果文件夹路径，默认为切片所在文件夹</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -478,6 +490,9 @@
           <family>微软雅黑</family>
           <pointsize>10</pointsize>
          </font>
+        </property>
+        <property name="toolTip">
+         <string>选择结果文件夹</string>
         </property>
         <property name="text">
          <string>选择文件夹</string>
@@ -571,6 +586,9 @@
           <pointsize>10</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>选择文件</string>
+        </property>
         <property name="text">
          <string>选择文件</string>
         </property>
@@ -606,6 +624,9 @@
           <pointsize>10</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>打开结果</string>
+        </property>
         <property name="text">
          <string>打开结果</string>
         </property>
@@ -640,6 +661,9 @@
           <family>微软雅黑</family>
           <pointsize>10</pointsize>
          </font>
+        </property>
+        <property name="toolTip">
+         <string>开始处理</string>
         </property>
         <property name="text">
          <string>开始处理</string>
@@ -713,9 +737,15 @@
    <property name="text">
     <string>退出程序</string>
    </property>
+   <property name="statusTip">
+    <string>退出程序</string>
+   </property>
   </action>
   <action name="action_about">
    <property name="text">
+    <string>关于软件</string>
+   </property>
+   <property name="statusTip">
     <string>关于软件</string>
    </property>
   </action>
@@ -723,15 +753,30 @@
    <property name="text">
     <string>默认配置</string>
    </property>
+   <property name="statusTip">
+    <string>打开默认配置，软件启动时有效</string>
+   </property>
   </action>
   <action name="action_stop">
    <property name="text">
-    <string>中止处理</string>
+    <string>终止处理</string>
+   </property>
+   <property name="iconText">
+    <string>终止处理</string>
+   </property>
+   <property name="toolTip">
+    <string>终止处理</string>
+   </property>
+   <property name="statusTip">
+    <string>终止处理</string>
    </property>
   </action>
   <action name="action_open_running_config">
    <property name="text">
     <string>运行配置</string>
+   </property>
+   <property name="statusTip">
+    <string>打开运行配置，仅本次运行有效</string>
    </property>
   </action>
  </widget>
