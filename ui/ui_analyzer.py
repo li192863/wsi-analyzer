@@ -322,13 +322,13 @@ class Ui_Analyzer(object):
 
         self.layout_operation.addItem(self.horizontalSpacer_2)
 
-        self.button_open_config = QPushButton(self.centralwidget)
-        self.button_open_config.setObjectName(u"button_open_config")
-        sizePolicy1.setHeightForWidth(self.button_open_config.sizePolicy().hasHeightForWidth())
-        self.button_open_config.setSizePolicy(sizePolicy1)
-        self.button_open_config.setFont(font3)
+        self.button_open_result_folder = QPushButton(self.centralwidget)
+        self.button_open_result_folder.setObjectName(u"button_open_result_folder")
+        sizePolicy1.setHeightForWidth(self.button_open_result_folder.sizePolicy().hasHeightForWidth())
+        self.button_open_result_folder.setSizePolicy(sizePolicy1)
+        self.button_open_result_folder.setFont(font3)
 
-        self.layout_operation.addWidget(self.button_open_config)
+        self.layout_operation.addWidget(self.button_open_result_folder)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum)
 
@@ -435,7 +435,7 @@ class Ui_Analyzer(object):
         self.label_11.setText(QCoreApplication.translate("Analyzer", u"\u8fd0\u884c\u8fdb\u5ea6", None))
         self.progressBar.setFormat(QCoreApplication.translate("Analyzer", u"%p%", None))
         self.button_choose_file.setText(QCoreApplication.translate("Analyzer", u"\u9009\u62e9\u6587\u4ef6", None))
-        self.button_open_config.setText(QCoreApplication.translate("Analyzer", u"\u6253\u5f00\u914d\u7f6e", None))
+        self.button_open_result_folder.setText(QCoreApplication.translate("Analyzer", u"\u6253\u5f00\u7ed3\u679c", None))
         self.button_process.setText(QCoreApplication.translate("Analyzer", u"\u5f00\u59cb\u5904\u7406", None))
         self.menu_file.setTitle(QCoreApplication.translate("Analyzer", u"\u6587\u4ef6", None))
         self.menu_about.setTitle(QCoreApplication.translate("Analyzer", u"\u5173\u4e8e", None))

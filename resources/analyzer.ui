@@ -593,7 +593,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="button_open_config">
+       <widget class="QPushButton" name="button_open_result_folder">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -607,7 +607,7 @@
          </font>
         </property>
         <property name="text">
-         <string>打开配置</string>
+         <string>打开结果</string>
         </property>
        </widget>
       </item>

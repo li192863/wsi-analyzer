@@ -1,3 +1,4 @@
+import os
 import time
 
 from PySide2 import QtWidgets
@@ -77,6 +78,8 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self.ui.checkbox_drop_last.setChecked(self.config.slicer.drop_last)
         # 输出地址
         self.ui.lineEdit_result_folder.setText(self.config.basic.result_folder)
+        # 切片文件
+        self.filelist = []
 
     def bind_events(self):
         """
@@ -92,7 +95,7 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         # 按钮
         self.ui.button_choose_result_folder.clicked.connect(self.on_button_choose_result_folder_clicked)
         self.ui.button_choose_file.clicked.connect(self.on_button_choose_file_clicked)
-        self.ui.button_open_config.clicked.connect(self.on_button_open_config_clicked)
+        self.ui.button_open_result_folder.clicked.connect(self.on_button_open_result_folder_clicked)
         self.ui.button_process.clicked.connect(self.on_button_process_clicked)
 
     def read_ui_config(self):
@@ -131,7 +134,7 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self.ui.button_choose_result_folder.setEnabled(enabled)
         # 按钮区域
         self.ui.button_choose_file.setEnabled(enabled)
-        self.ui.button_open_config.setEnabled(enabled)
+        self.ui.button_open_result_folder.setEnabled(enabled)
         self.ui.button_process.setEnabled(enabled)
 
     def on_action_stop(self):
@@ -186,12 +189,17 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         )
         self.status_binder.info(f'已选择{len(self.filelist)}个病理切片文件')
 
-    def on_button_open_config_clicked(self):
-        """ 打开配置被点击 """
+    def on_button_open_result_folder_clicked(self):
+        """ 打开结果被点击 """
+        # 确定打开文件夹
+        result_folder = self.config.basic.result_folder
+        if result_folder == '':
+            if self.filelist is None or len(self.filelist) == 0:
+                self.status_binder.warning('请选择文件或设置结果文件夹！')
+                return
+            result_folder, _ = os.path.split(self.filelist[0])
         # 打开配置文件
-        QDesktopServices.openUrl(QUrl.fromLocalFile(self.default_config_file))
-        # 显示警告信息
-        self.status_binder.warning('请注意重启应用才可生效配置！')
+        QDesktopServices.openUrl(QUrl.fromLocalFile(result_folder))
 
     def on_button_process_clicked(self):
         """ 开始处理被点击时触发 """
