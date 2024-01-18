@@ -6,7 +6,7 @@ from model.segmentation import *
 
 def get_seg_model(classes) -> nn.Module:
     """
-    获取分类模型
+    获取分类模型，请手动修改该函数以适配自己的模型
     :param classes: 种类列表
     :return:
     """
@@ -17,7 +17,7 @@ def get_seg_model(classes) -> nn.Module:
 
 def get_cla_model(classes) -> nn.Module:
     """
-    获取分类模型
+    获取分类模型，请手动修改该函数以适配自己的模型
     :param classes: 种类列表
     :return:
     """
