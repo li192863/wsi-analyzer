@@ -81,6 +81,8 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         # 切片文件
         self.filelist = []
         self.result_folder = None
+        # 设置焦点
+        self.ui.button_choose_file.setFocus()
 
     def bind_events(self):
         """
@@ -146,6 +148,8 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
             threading.Thread(target=self.process_thread.stop).start()
         else:
             self.status_binder.warning('未在处理中！')
+            # 设置焦点
+            self.ui.button_choose_file.setFocus()
 
     def on_action_exit(self):
         """ 退出程序 """
@@ -177,6 +181,8 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
             caption='请选择输出文件夹地址'
         )
         self.ui.lineEdit_result_folder.setText(self.config.basic.result_folder)
+        # 设置焦点
+        self.ui.button_choose_file.setFocus()
 
     def on_button_choose_file_clicked(self):
         """ 选择文件被点击时触发 """
@@ -186,15 +192,21 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
             filter='病理切片(*.svs *.tif *.tiff *.mrxs *.jpg *.jpeg *.png *webp)'
         )
         self.status_binder.info(f'已选择{len(self.filelist)}个病理切片文件')
+        # 设置焦点
+        self.ui.button_process.setFocus()
 
     def on_button_open_result_folder_clicked(self):
         """ 打开结果被点击 """
         # 确定打开文件夹
         if self.result_folder is None or self.result_folder == '':
             self.status_binder.warning('请选择文件进行处理！')
+            # 设置焦点
+            self.ui.button_choose_file.setFocus()
             return
         # 打开配置文件
         QDesktopServices.openUrl(QUrl.fromLocalFile(self.result_folder))
+        # 设置焦点
+        self.ui.button_choose_file.setFocus()
 
     def on_button_process_clicked(self):
         """ 开始处理被点击时触发 """
@@ -228,6 +240,11 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self.status_binder.success(value)
         self.result_folder = self._get_result_folder()
         self.filelist = []
+        # 设置焦点
+        self.ui.button_open_result_folder.setFocus()
+        # 设置提示
+        QApplication.beep()  # 提示音
+        QApplication.alert(self)  # 任务栏闪烁提醒
 
     @Slot(str)
     def on_process_failed_signal(self, value):
@@ -236,6 +253,11 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self.status_binder.error(value)
         self.result_folder = self._get_result_folder()
         self.progress_binder.set(0)
+        # 设置焦点
+        self.ui.button_open_result_folder.setFocus()
+        # 设置提示
+        QApplication.beep()  # 提示音
+        QApplication.alert(self)  # 任务栏闪烁提醒
 
     @Slot(str)
     def on_process_stop_signal(self, value):
@@ -244,6 +266,11 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self.status_binder.error(value)
         self.result_folder = self._get_result_folder()
         self.progress_binder.set(0)
+        # 设置焦点
+        self.ui.button_open_result_folder.setFocus()
+        # 设置提示
+        QApplication.beep()  # 提示音
+        QApplication.alert(self)  # 任务栏闪烁提醒
 
     @Slot(str, QPalette)
     def on_status_message_signal(self, message, palette):
