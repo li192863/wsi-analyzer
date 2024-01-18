@@ -1,8 +1,10 @@
+from torch import nn
+
 from model.classification import *
 from model.segmentation import *
 
 
-def get_seg_model(classes):
+def get_seg_model(classes) -> nn.Module:
     """
     获取分类模型
     :param classes: 种类列表
@@ -13,7 +15,7 @@ def get_seg_model(classes):
     return model
 
 
-def get_cla_model(classes):
+def get_cla_model(classes) -> nn.Module:
     """
     获取分类模型
     :param classes: 种类列表
