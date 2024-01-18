@@ -1,5 +1,5 @@
 import os
-import time
+import threading
 
 from PySide2 import QtWidgets
 from PySide2.QtCore import QUrl, Slot
@@ -80,6 +80,7 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self.ui.lineEdit_result_folder.setText(self.config.basic.result_folder)
         # 切片文件
         self.filelist = []
+        self.result_folder = None
 
     def bind_events(self):
         """
@@ -139,15 +140,12 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
 
     def on_action_stop(self):
         """ 中断处理 """
-        if hasattr(self, 'process_thread') and self.process_thread is not None and self.process_thread.isRunning():
+        if hasattr(self, 'process_thread') and self.process_thread is not None and self.process_thread.is_alive():
             # 终止线程
-            self.process_thread.terminate()
-            self.process_thread.wait()
-            del self.process_thread
-            # 界面操作
-            self.progress_binder.set(0)
-            self.status_binder.warning('已终止运行！')
-            self._change_window(True)
+            self.status_binder.warning('正在尝试终止...')
+            threading.Thread(target=self.process_thread.stop).start()
+        else:
+            self.status_binder.warning('未在处理中！')
 
     def on_action_exit(self):
         """ 退出程序 """
@@ -192,14 +190,11 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
     def on_button_open_result_folder_clicked(self):
         """ 打开结果被点击 """
         # 确定打开文件夹
-        result_folder = self.config.basic.result_folder
-        if result_folder == '':
-            if self.filelist is None or len(self.filelist) == 0:
-                self.status_binder.warning('请选择文件或设置结果文件夹！')
-                return
-            result_folder, _ = os.path.split(self.filelist[0])
+        if self.result_folder is None or self.result_folder == '':
+            self.status_binder.warning('请选择文件进行处理！')
+            return
         # 打开配置文件
-        QDesktopServices.openUrl(QUrl.fromLocalFile(result_folder))
+        QDesktopServices.openUrl(QUrl.fromLocalFile(self.result_folder))
 
     def on_button_process_clicked(self):
         """ 开始处理被点击时触发 """
@@ -211,23 +206,44 @@ class AnalyzerWindow(QtWidgets.QMainWindow):
         self._change_window(False)
         # 启动处理线程
         self.process_thread: ProcessThread = ProcessThread(self.config, self.running_confile_file)
-        self.process_thread.process_complete_signal.connect(self.on_process_complete_signal)
-        self.process_thread.process_failed_signal.connect(self.on_process_failed_signal)
+        self.process_thread.emitter.process_complete_signal.connect(self.on_process_complete_signal)
+        self.process_thread.emitter.process_failed_signal.connect(self.on_process_failed_signal)
+        self.process_thread.emitter.process_stop_signal.connect(self.on_process_stop_signal)
         self.process_thread.start()
+
+    def _get_result_folder(self):
+        """ 获取结果文件夹 """
+        self.read_ui_config()
+        result_folder = self.config.basic.result_folder
+        if result_folder == '':
+            if self.filelist is None or len(self.filelist) == 0:
+                return None
+            result_folder, _ = os.path.split(self.filelist[0])
+        return result_folder
 
     @Slot(str)
     def on_process_complete_signal(self, value):
         """ 处理完成时触发事件 """
         self._change_window(True)
         self.status_binder.success(value)
+        self.result_folder = self._get_result_folder()
         self.filelist = []
 
     @Slot(str)
     def on_process_failed_signal(self, value):
-        """ 处理识别时触发事件"""
+        """ 处理识别时触发事件 """
         self._change_window(True)
         self.status_binder.error(value)
-        self.filelist = []
+        self.result_folder = self._get_result_folder()
+        self.progress_binder.set(0)
+
+    @Slot(str)
+    def on_process_stop_signal(self, value):
+        """ 处理终止时触发事件 """
+        self._change_window(True)
+        self.status_binder.error(value)
+        self.result_folder = self._get_result_folder()
+        self.progress_binder.set(0)
 
     @Slot(str, QPalette)
     def on_status_message_signal(self, message, palette):
