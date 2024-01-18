@@ -8,13 +8,13 @@
 
 该程序实现功能为：将一张或多张病理切片，输出各个切片的病理分析报告。
 
-作者为本人，欢迎Fork以及PR。
+作者为[@li192863](https://github.com/li192863)，联系邮箱为li192863**1**@163.com，欢迎Fork以及PR。
 
 ![image-20240118123443234](./.github/软件界面.png)
 
 ### 环境要求
 
-环境要求：Windows、Python、PyTorch、PySide6
+环境要求：Windows、Python、PyTorch、PySide6，若想打包使用，请安装PyInstaller。
 
 1. 下载源码:
 
