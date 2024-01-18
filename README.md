@@ -45,7 +45,7 @@ pip install -r requirements.txt                        # 安装其他依赖
 
 ### 项目搭建
 
-1. 放置模型，放置分割模型于`./model/classification`文件夹下，放置分类模型于`./model/segmentation`文件夹下，确保模型可被调用；
+1. 放置模型，放置分割模型于`./model/segmentation`文件夹下，放置分类模型于`./model/classification`文件夹下，确保模型可被调用；
 
 ![image-20240118230034227](./.github/模型文件.png)
 
@@ -60,7 +60,7 @@ from model.segmentation import *
 
 def get_seg_model(classes) -> nn.Module:
     """
-    获取分类模型
+    获取分类模型，请手动修改该函数以适配自己的模型
     :param classes: 种类列表
     :return:
     """
@@ -71,7 +71,7 @@ def get_seg_model(classes) -> nn.Module:
 
 def get_cla_model(classes) -> nn.Module:
     """
-    获取分类模型
+    获取分类模型，请手动修改该函数以适配自己的模型
     :param classes: 种类列表
     :return:
     """
