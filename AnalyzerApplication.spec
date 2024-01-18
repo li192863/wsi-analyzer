@@ -10,6 +10,7 @@ a = Analysis(
     datas=[
         ('./conf', './conf'),
         ('./logs', './logs'),
+        ('./data', './data'),
         ('./resources', './resources'),
         ('./vips-dev-8.14', './vips-dev-8.14'),
         ('./weights', './weights')
