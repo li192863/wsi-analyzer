@@ -13,7 +13,7 @@ def main():
     :return:
     """
     # error
-    sys.stderr = open('./logs/error.txt')
+    sys.stderr = open('./logs/error.txt', 'w')
     faulthandler.enable()
     # logger
     init_file_logger()
