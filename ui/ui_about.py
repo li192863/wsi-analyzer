@@ -3,22 +3,27 @@
 ################################################################################
 ## Form generated from reading UI file 'about.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.15.2
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QDialog, QHBoxLayout, QLabel,
+    QSizePolicy, QVBoxLayout, QWidget)
 
 class Ui_About(object):
-    def setupUi(self, Dialog):
-        if not Dialog.objectName():
-            Dialog.setObjectName(u"Dialog")
-        Dialog.resize(500, 300)
-        self.verticalLayoutWidget = QWidget(Dialog)
+    def setupUi(self, About):
+        if not About.objectName():
+            About.setObjectName(u"About")
+        About.resize(500, 300)
+        self.verticalLayoutWidget = QWidget(About)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
         self.verticalLayoutWidget.setGeometry(QRect(10, 10, 481, 281))
         self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
@@ -29,7 +34,7 @@ class Ui_About(object):
         self.label_5 = QLabel(self.verticalLayoutWidget)
         self.label_5.setObjectName(u"label_5")
         font = QFont()
-        font.setFamily(u"Times New Roman")
+        font.setFamilies([u"Times New Roman"])
         self.label_5.setFont(font)
         self.label_5.setAlignment(Qt.AlignCenter)
 
@@ -111,15 +116,15 @@ class Ui_About(object):
         self.verticalLayout.addLayout(self.horizontalLayout_4)
 
 
-        self.retranslateUi(Dialog)
+        self.retranslateUi(About)
 
-        QMetaObject.connectSlotsByName(Dialog)
+        QMetaObject.connectSlotsByName(About)
     # setupUi
 
-    def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("About", u"\u5173\u4e8e", None))
+    def retranslateUi(self, About):
+        About.setWindowTitle(QCoreApplication.translate("About", u"\u5173\u4e8e", None))
         self.label_5.setText(QCoreApplication.translate("About", u"Version", None))
-        self.label_8.setText(QCoreApplication.translate("About", u"v3.6.0", None))
+        self.label_8.setText(QCoreApplication.translate("About", u"v3.3.0", None))
         self.label.setText(QCoreApplication.translate("About", u"Author", None))
         self.label_2.setText(QCoreApplication.translate("About", u"Chestnut", None))
         self.label_3.setText(QCoreApplication.translate("About", u"GitHub", None))

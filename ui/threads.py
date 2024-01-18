@@ -5,7 +5,7 @@ import threading
 import time
 import traceback
 
-from PySide2.QtCore import QThread, Signal
+from PySide6.QtCore import QThread, Signal
 
 from engine import Processor
 from utils import write_config, read_config

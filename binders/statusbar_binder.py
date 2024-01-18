@@ -1,5 +1,5 @@
-from PySide2.QtCore import Signal, QObject
-from PySide2.QtGui import QColor, QPalette
+from PySide6.QtCore import Signal, QObject
+from PySide6.QtGui import QColor, QPalette
 
 from binders.binder import Binder
 

@@ -1,7 +1,7 @@
 import faulthandler
 import sys
 
-from PySide2.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 
 from ui import AnalyzerWindow
 from utils import init_file_logger
