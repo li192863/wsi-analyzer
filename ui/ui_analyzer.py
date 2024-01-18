@@ -368,7 +368,7 @@ class Ui_Analyzer(object):
         Analyzer.setStatusBar(self.statusbar)
         self.menuBar = QMenuBar(Analyzer)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 489, 22))
+        self.menuBar.setGeometry(QRect(0, 0, 700, 22))
         self.menu_file = QMenu(self.menuBar)
         self.menu_file.setObjectName(u"menu_file")
         self.menu_about = QMenu(self.menuBar)
@@ -392,7 +392,7 @@ class Ui_Analyzer(object):
     # setupUi
 
     def retranslateUi(self, Analyzer):
-        Analyzer.setWindowTitle(QCoreApplication.translate("Analyzer", u"\u5207\u7247\u5904\u7406\u5668", None))
+        Analyzer.setWindowTitle(QCoreApplication.translate("Analyzer", u"\u5207\u7247\u5206\u6790\u5668", None))
         self.action_exit.setText(QCoreApplication.translate("Analyzer", u"\u9000\u51fa\u7a0b\u5e8f", None))
 #if QT_CONFIG(statustip)
         self.action_exit.setStatusTip(QCoreApplication.translate("Analyzer", u"\u9000\u51fa\u7a0b\u5e8f", None))
