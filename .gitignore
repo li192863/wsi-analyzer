@@ -138,9 +138,6 @@ dmypy.json
 /model/segmentation/
 /tmp/
 /vips-dev-8.14/
-/logs/
 /conf/running_set.yml
 /openslide-win64-20231011/
-/model/classification/
-/model/segmentation/
 *.pkl
