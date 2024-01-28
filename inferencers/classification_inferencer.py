@@ -11,19 +11,25 @@ class ClassificationPresetEval:
     def __init__(
             self,
             *,
-            resize_size=256,
-            mean=(0.723, 0.485, 0.608),
-            std=(0.293, 0.377, 0.333),
+            resize_size,
+            crop_size=None,
+            mean=None,  # (0.723, 0.485, 0.608)
+            std=None,  # (0.293, 0.377, 0.333)
             interpolation=InterpolationMode.BILINEAR,
     ):
-        self.transforms = transforms.Compose(
-            [
-                transforms.Resize(resize_size, interpolation=interpolation),
-                transforms.PILToTensor(),
-                transforms.ConvertImageDtype(torch.float),
-                transforms.Normalize(mean=mean, std=std),
-            ]
-        )
+        # 缩放
+        trans = [transforms.Resize(resize_size, interpolation=interpolation)]
+        # 剪裁 可选
+        if crop_size is not None:
+            trans.append(transforms.CenterCrop(crop_size))
+        # 转图
+        trans.append(transforms.PILToTensor())
+        trans.append(transforms.ConvertImageDtype(torch.float))
+        # 归一 可选
+        if mean is not None and std is not None:
+            trans.append(transforms.Normalize(mean=mean, std=std))
+
+        self.transforms = transforms.Compose(trans)
 
     def __call__(self, img):
         return self.transforms(img)
@@ -37,8 +43,7 @@ class ClassificationInferencer(Inferencer):
             model,
             weight,
             classes,
-            transform_cls=ClassificationPresetEval,
-            inference_size=None,
+            transform=None,
             required_size=None,
             batch_size=8,
             device=None
@@ -48,14 +53,21 @@ class ClassificationInferencer(Inferencer):
         :param model: 模型
         :param weight: 模型权重路径，字符串
         :param classes: 模型类别信息，列表
-        :param transform_cls: 模型预处理器
+        :param transform: 模型预处理器
         :param inference_size: 模型推理时使用的尺寸 **[height, width]**
         :param required_size: 模型输出时使用的尺寸 **[height, width]**
         :param batch_size: 推理时的批次
         :param device: 推理时使用的设备，默认情况下，cuda可用时使用cuda，否则使用cpu
         """
-        super(ClassificationInferencer, self).__init__(model, weight, classes, transform_cls, inference_size,
-                                                       required_size, batch_size, device)
+        super(ClassificationInferencer, self).__init__(
+            model,
+            weight,
+            classes,
+            transform,
+            required_size,
+            batch_size,
+            device
+        )
 
     def post_process(self, inputs: Tensor, outputs: Tensor) -> list:
         """
@@ -76,7 +88,7 @@ if __name__ == '__main__':
     classes = ['出血', '坏死', '实质', '淋巴', '空泡', '空白', '间质']
     model = get_cla_model(classes)
     weight = '../weights/cla_model.pth'
-    # inferencer = ClassificationInferencer(model, weight, classes, batch_size=32, inference_size=(256, 256))
+    # inferencer = ClassificationInferencer(model, weight, classes, batch_size=32)
     # predictions = inferencer.inference_folder(r'E:\test_folder\TCGA-2Y-A9H5-01Z-00-DX108348C3C-A16F-45F6-8AE9-D0613268D703\cla_slices')
     # print(predictions)
     # inferencer = ClassificationInferencer(model, weight, classes, batch_size=16, inference_size=(255, 250), required_size=[512, 200])

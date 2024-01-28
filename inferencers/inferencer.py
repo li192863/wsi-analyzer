@@ -62,8 +62,7 @@ class Inferencer(ABC):
             model,
             weight,
             classes,
-            transform_cls=None,
-            inference_size=None,
+            transform=None,
             required_size=None,
             batch_size=8,
             device=None
@@ -73,8 +72,7 @@ class Inferencer(ABC):
         :param model: 模型
         :param weight: 模型权重路径，字符串
         :param classes: 模型类别信息，列表
-        :param transform_cls: 模型预处理器
-        :param inference_size: 模型推理时使用的尺寸 **[height, width]**
+        :param transform: 模型预处理器
         :param required_size: 模型输出时使用的尺寸 **[height, width]**
         :param batch_size: 推理时的批次
         :param device: 推理时使用的设备，默认情况下，cuda可用时使用cuda，否则使用cpu
@@ -82,8 +80,7 @@ class Inferencer(ABC):
         self.model = model
         self.weight = weight
         self.classes = classes
-        self.transform_cls = transform_cls
-        self.inference_size = inference_size  # 图片的高宽(h, w)，默认以图片列表第一张图片为输出尺寸
+        self.transform = transform
         self.required_size = required_size  # 图片的高宽(h, w)，默认以图片列表第一张图片为输出尺寸
         self.batch_size = batch_size
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
@@ -113,21 +110,14 @@ class Inferencer(ABC):
         :param files: 图片文件列表
         :return: dataloader
         """
-        if self.inference_size is None:
-            image = Image.open(files[0])
-            width, height = image.size
-            resize_size = (height, width)
-        else:
-            resize_size = self.inference_size
         if self.required_size is None:
             image = Image.open(files[0])
             width, height = image.size
             required_size = (height, width)
         else:
             required_size = self.required_size
-        transform = self.transform_cls(resize_size=resize_size)
         self.logger.debug(f'推理变形尺寸为{required_size}')
-        dataset = FileListDataset(files, required_size, transform=transform)
+        dataset = FileListDataset(files, required_size, transform=self.transform)
         dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
         return dataloader
 
