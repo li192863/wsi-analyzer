@@ -155,7 +155,15 @@ class Resumer(object):
         """
         if old_config.inferencer.segmentation.weight != new_config.inferencer.segmentation.weight:
             return True
-        elif old_config.inferencer.segmentation.inference_size != new_config.inferencer.segmentation.inference_size:
+        elif old_config.inferencer.segmentation.classes != new_config.inferencer.segmentation.classes:
+            return True
+        elif old_config.inferencer.segmentation.transforms.resize_size != new_config.inferencer.segmentation.transforms.resize_size:
+            return True
+        elif old_config.inferencer.segmentation.transforms.crop_size != new_config.inferencer.segmentation.transforms.crop_size:
+            return True
+        elif old_config.inferencer.segmentation.transforms.mean != new_config.inferencer.segmentation.transforms.mean:
+            return True
+        elif old_config.inferencer.segmentation.transforms.std != new_config.inferencer.segmentation.transforms.std:
             return True
         else:
             return False
@@ -169,7 +177,15 @@ class Resumer(object):
         """
         if old_config.inferencer.classification.weight != new_config.inferencer.classification.weight:
             return True
-        elif old_config.inferencer.classification.inference_size != new_config.inferencer.classification.inference_size:
+        elif old_config.inferencer.classification.classes != new_config.inferencer.classification.classes:
+            return True
+        elif old_config.inferencer.classification.transforms.resize_size != new_config.inferencer.classification.transforms.resize_size:
+            return True
+        elif old_config.inferencer.classification.transforms.crop_size != new_config.inferencer.classification.transforms.crop_size:
+            return True
+        elif old_config.inferencer.classification.transforms.mean != new_config.inferencer.classification.transforms.mean:
+            return True
+        elif old_config.inferencer.classification.transforms.std != new_config.inferencer.classification.transforms.std:
             return True
         else:
             return False
