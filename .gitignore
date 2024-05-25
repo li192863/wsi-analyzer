@@ -132,9 +132,9 @@ dmypy.json
 
 # data
 *.pth
-/model/classification/
+/model/classification/*
 !/model/classification/README.md
-/model/segmentation/
+/model/segmentation/*
 !/model/segmentation/README.md
 /tmp/
 /vips-dev-8.14/
