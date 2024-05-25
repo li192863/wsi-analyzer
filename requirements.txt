@@ -1,0 +1,13 @@
+# requirements
+# Usage: pip install -r requirements.txt
+
+addict>=2.4.0
+matplotlib>=3.3
+PySide6>=6.6.1
+pyvips>=2.2.2
+PyYAML>=5.3.1
+torch==1.13.1  # see https://pytorch.org/get-started/locally (recommended)
+torchvision==0.14.1
+
+# 可选
+# pyinstaller==5.13.0
